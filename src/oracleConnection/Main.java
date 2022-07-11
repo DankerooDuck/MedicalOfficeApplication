@@ -26,13 +26,6 @@ public class Main {
 		{	
 			System.out.print("You are on login attempt " + (i+1) + " of 3.\n");
 			//prompt user for username
-			System.out.print("Please input your username: ");
-			user = input.next();
-			System.out.print("1. Customer");
-				
-			//prompt user for password
-			System.out.print("Please input your password: ");
-			pword = input.next();
 			
 			//alert user program will attempt to connect
 			System.out.print("Establishing connection to " + url + " as " + user + "...\n");
