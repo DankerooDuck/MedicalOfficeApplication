@@ -28,6 +28,7 @@ public class Main {
 			//prompt user for username
 			System.out.print("Please input your username: ");
 			user = input.next();
+			System.out.print("1. Customer");
 				
 			//prompt user for password
 			System.out.print("Please input your password: ");
