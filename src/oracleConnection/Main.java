@@ -9,8 +9,8 @@ public class Main {
 	{
 		Scanner input = new Scanner(System.in);
 		Connection con = null;
-		String user = null;
-		String pword = null;
+		String user = "T11";
+		String pword = "Summer2022T11";
 		String url = null;
 		
 		
