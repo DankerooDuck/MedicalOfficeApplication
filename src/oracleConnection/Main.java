@@ -31,15 +31,23 @@ public class Main {
 
 			PreparedStatement statement;
 
-			String qry = "INSERT Fname, Lname, Minit FROM DOCTOR";
+			String qry = "INSERT INTO DOCTOR (doctorid, fname, lname, minit ) VALUES (?,?,?,?)";
 
-			statement = con.prepareStatement(qry);
-			if(!statement.execute())
-				System.out.println("NOT SUCCESSFUL");
 
 			//attempt to connect
 			try {
 				con = DriverManager.getConnection(url, user, pword);
+
+				statement = con.prepareStatement(qry);
+
+				statement.setInt(1,0001);
+				statement.setString(2, "johnnn");
+				statement.setString(3, "larrs");
+				statement.setString(4, "R");
+
+				if(!statement.execute())
+					System.out.println("NOT SUCCESSFUL");
+
 			} catch (SQLException e) {
 				//quit with error if failed
 				e.printStackTrace();
