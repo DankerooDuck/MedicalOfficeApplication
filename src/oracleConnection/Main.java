@@ -4,14 +4,12 @@ import java.sql.*;
 import java.util.Scanner;
 
 public class Main {
-
-	public static void main(String[] args) throws InterruptedException
-	{
+	public static void main(String[] args) throws InterruptedException, SQLException {
 		Scanner input = new Scanner(System.in);
 		Connection con = null;
 		String user = "T11";
 		String pword = "Summer2022T11";
-		String url = null;j;l
+		String url = null;
 		
 		
 		//database url
@@ -30,7 +28,15 @@ public class Main {
 			//alert user program will attempt to connect
 			System.out.print("Establishing connection to " + url + " as " + user + "...\n");
 			System.out.println();
-			
+
+			PreparedStatement statement;
+
+			String qry = "INSERT Fname, Lname, Minit FROM DOCTOR";
+
+			statement = con.prepareStatement(qry);
+			if(!statement.execute())
+				System.out.println("NOT SUCCESSFUL");
+
 			//attempt to connect
 			try {
 				con = DriverManager.getConnection(url, user, pword);
