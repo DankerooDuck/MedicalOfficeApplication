@@ -11,7 +11,7 @@ public class Main {
 		Connection con = null;
 		String user = "T11";
 		String pword = "Summer2022T11";
-		String url = null;
+		String url = null;j;l
 		
 		
 		//database url
