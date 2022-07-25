@@ -10,8 +10,78 @@ public class Main {
 	static final String url = "jdbc:oracle:thin:@cisvm-oracle.unfcsd.unf.edu:1521:orcl";
 	private Connection con;
 
-	public static void main(String[] args) throws InterruptedException, SQLException {
+	void printResults(ResultSet set) {
+		// STUB
+	}
 
+	public void createOutstandingAppointmentsReport() throws SQLException {
+		String qry = "SELECT * FROM APPOINTMENT WHERE apptid = (SELECT visit_appointments_apptid FROM BILL WHERE amountdue > 0)";
+
+		PreparedStatement statement = con.prepareStatement(qry);
+
+		ResultSet result = statement.executeQuery();
+		if(result != null) {
+			printResults(result);
+		} else {
+			System.out.println("Failed to get results for this report.");
+		}
+	}
+
+	public void createUnpaidBillsReport() throws SQLException {
+		String qry = "SELECT * FROM BILL WHERE amountdue > 0";
+
+		PreparedStatement statement = con.prepareStatement(qry);
+
+		ResultSet result = statement.executeQuery();
+		if(result != null) {
+			printResults(result);
+		} else {
+			System.out.println("Failed to get results for this report.");
+		}
+	}
+
+	public void createPaidBillsReports() throws SQLException {
+		String qry = "SELECT * FROM BILL WHERE amountdue = 0";
+
+		PreparedStatement statement = con.prepareStatement(qry);
+
+		ResultSet result = statement.executeQuery();
+		if(result != null) {
+			printResults(result);
+		} else {
+			System.out.println("Failed to get results for this report.");
+		}
+	}
+
+	public void createActivePatientReport() throws SQLException {
+		// TODO: are active patients really ones that have outstanding bills? or should it based on upcoming appts or something similar?
+		String qry = "SELECT * FROM PATIENT WHERE patientid = (SELECT (pid) FROM BILL WHERE amount > 0)";
+
+		PreparedStatement statement = con.prepareStatement(qry);
+
+		ResultSet result = statement.executeQuery();
+		if(result != null) {
+			printResults(result);
+		} else {
+			System.out.println("Failed to get results for this report.");
+		}
+	}
+
+	public void createActiveDoctorReport() throws SQLException {
+		// TODO: broken query
+		String qry = "SELECT * FROM DOCTOR";
+
+		PreparedStatement statement = con.prepareStatement(qry);
+
+		ResultSet result = statement.executeQuery();
+		if(result != null) {
+			printResults(result);
+		} else {
+			System.out.println("Failed to get results for this report.");
+		}
+	}
+
+	public static void main(String[] args) throws InterruptedException, SQLException {
 		try {
 			Main pgm = new Main();
 			pgm.con = pgm.GetConnection(url, user, pword);
@@ -62,12 +132,45 @@ public class Main {
 			} else if (userInput.equals("4")) {
 				Create_Update_Bill();
 			} else if (userInput.equals("5")) {
-				//report method
+				Create_Reports();
 			} else if (userInput.equals("6")) {
 				con.close();
 				System.exit(0);
 			}
 			//return 0;
+		}
+	}
+
+	private void Create_Reports() {
+		Scanner sc = new Scanner(System.in);
+
+		System.out.println("1. Outstanding Appointments.");
+		System.out.println("2. Unpaid Bills");
+		System.out.println("3. Paid Bills");
+		System.out.println("4. Active Patients");
+		System.out.println("5. Active Doctors");
+
+		try {
+			int input = sc.nextInt();
+			switch(input) {
+				case 1:
+					createOutstandingAppointmentsReport();
+					break;
+				case 2:
+					createUnpaidBillsReport();
+					break;
+				case 3:
+					createPaidBillsReports();
+					break;
+				case 4:
+					createActivePatientReport();
+					break;
+				case 5:
+					createActiveDoctorReport();
+					break;
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
