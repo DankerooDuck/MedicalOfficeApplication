@@ -316,7 +316,7 @@ public class Main {
 				}
 				else if(userInput.equals("3")) {
 
-					String qry = "UPDATE PATIENT set minit = ? where minit = ?"; //update patient minit based on patient ID
+					String qry = "UPDATE PATIENT set minit = ? where patient = ?"; //update patient minit based on patient ID
 					PreparedStatement statement = con.prepareStatement(qry);
 
 					String minit = "";
