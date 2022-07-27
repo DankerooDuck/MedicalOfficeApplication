@@ -413,7 +413,7 @@ public class Main {
 				System.out.println("Enter Appointment ID:");
 				statement.setInt(1, sc.nextInt());
 
-				System.out.println("Enter Date/Time:");
+				System.out.println("Enter Date/Time (YYYY-MM-DD):");
 				statement.setDate(2, Date.valueOf(sc.next())); //Date format Example: YYYY-MM-DD
 
 				System.out.println("Enter patientID:");
@@ -429,7 +429,7 @@ public class Main {
 			{
 				System.out.println("What do you want to update:");
 				System.out.println("1. Appointment ID.");
-				System.out.println("2. Appointment Date/Time.");
+				System.out.println("2. Appointment Date/Time (YYYY-MM-DD).");
 				userInput = sc.next();
 				if(userInput.equals("1")) {
 
@@ -449,10 +449,10 @@ public class Main {
 					String qry = "UPDATE APPOINTMENT set datetime = ? where datetime = ?"; // 2000-01-01   2022-10-11
 					PreparedStatement statement = con.prepareStatement(qry);
 
-					System.out.println("Enter appointment's new Date/Time.");
+					System.out.println("Enter appointment's new Date/Time (YYYY-MM-DD).");
 					statement.setDate(1, Date.valueOf(sc.next()));
 
-					System.out.println("Enter appointment's old Date/Time.");
+					System.out.println("Enter appointment's old Date/Time (YYYY-MM-DD).");
 					statement.setDate(2, Date.valueOf(sc.next()));
 
 					statement.executeUpdate();
