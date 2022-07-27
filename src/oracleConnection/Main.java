@@ -200,7 +200,7 @@ public class Main {
 				System.out.println("Enter patient Minit:");
 				statement.setString(4, sc.next());
 
-				System.out.println("Enter patient dob:");
+				System.out.println("Enter patient dob (YYYY-MM-DD):");
 				statement.setDate(5, Date.valueOf(sc.next())); //Date format Example: YYYY-MM-DD
 
 				statement.execute();
@@ -271,10 +271,10 @@ public class Main {
 					String qry = "UPDATE PATIENT set dob = ? where dob = ?";
 					PreparedStatement statement = con.prepareStatement(qry);
 
-					System.out.println("Enter Patient's new dob.");
+					System.out.println("Enter Patient's new dob (YYYY-MM-DD).");
 					statement.setDate(1, Date.valueOf(sc.next()));
 
-					System.out.println("Enter Patient's old dob.");
+					System.out.println("Enter Patient's old dob (YYYY-MM-DD).");
 					statement.setDate(2, Date.valueOf(sc.next()));
 
 					statement.executeUpdate();
