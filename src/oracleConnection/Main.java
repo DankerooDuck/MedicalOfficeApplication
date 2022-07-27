@@ -10,12 +10,14 @@ public class Main {
 	static final String url = "jdbc:oracle:thin:@cisvm-oracle.unfcsd.unf.edu:1521:orcl";
 	private Connection con;
 
-	void printResults(ResultSet set) {
-		// STUB
+	void printResults(ResultSet set) throws SQLException {
+		while(set.next()) {
+			System.out.println(set.getString(2));
+		}
 	}
 
 	public void createOutstandingAppointmentsReport() throws SQLException {
-		String qry = "SELECT * FROM APPOINTMENT WHERE apptid = (SELECT visit_appointments_apptid FROM BILL WHERE amountdue > 0)";
+		String qry = "SELECT * FROM APPOINTMENT WHERE apptid = ANY (SELECT visit_appointments_apptid FROM BILL WHERE amountdue > 0)";
 
 		PreparedStatement statement = con.prepareStatement(qry);
 
