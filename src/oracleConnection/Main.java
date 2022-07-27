@@ -11,8 +11,23 @@ public class Main {
 	private Connection con;
 
 	void printResults(ResultSet set) throws SQLException {
+		ResultSetMetaData metaData = set.getMetaData();
+
+		// print header
+		for(int i = 0; i < metaData.getColumnCount(); i++) {
+			String columnName = metaData.getColumnName(i + 1);
+
+			System.out.print(columnName + " ");
+		}
+
+		System.out.println();
+
 		while(set.next()) {
-			System.out.println(set.getString(2));
+			for(int i = 0; i < metaData.getColumnCount(); i++) {
+				System.out.print(set.getString(i + 1) + " ");
+			}
+
+			System.out.println();
 		}
 	}
 
