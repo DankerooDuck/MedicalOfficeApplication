@@ -128,31 +128,22 @@ public class Main {
 		}
 	}
 
-	public static void main(String[] args) throws InterruptedException, SQLException {
+	public static void main(String[] args) {
 		try {
 			Main pgm = new Main();
-			pgm.con = pgm.GetConnection(url, user, pword);
+			pgm.con = pgm.GetConnection();
 			pgm.MainMenu();
 			pgm.con.close();
 		}
 		catch (SQLException se)
 		{
-			System.out.printf("Main method has an SQL issue: %s.\n", se.toString());
+			System.out.printf("Main method has an SQL issue: %s.\n", se);
 		}
 	}
 
 	//Connection
-	Connection GetConnection (String url, String user, String pword) throws SQLException {
-		Connection Con = null;
-		try
-		{
-			Con = DriverManager.getConnection(url, user, pword);
-		}
-		catch (SQLException e)
-		{
-			System.out.println("Failed to connect to DBMS in GetConnection() method.");
-		}
-		return Con;
+	Connection GetConnection() throws SQLException {
+		return DriverManager.getConnection(url, user, pword);
 	}
 
 	//Main menu
