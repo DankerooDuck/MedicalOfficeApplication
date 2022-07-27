@@ -128,6 +128,27 @@ public class Main {
 		}
 	}
 
+	public Boolean verifyUserInput(String input) {
+		//asks user to verify their input
+		//if 1 -> return true
+		//if 2 -> return false
+		Scanner sc = new Scanner(System.in);
+		String userInput;
+		System.out.println("You entered: " + input + ". Is this correct?");
+		System.out.println("1. Correct");
+		System.out.println("2. Incorrect");
+
+		userInput = sc.next(); //user input validation, correct or incorrect
+
+		if (userInput.equals("1")) {
+			return true; //exit loop
+		} else if (userInput.equals("2")) {
+			return false; //loop
+		} else {
+			return null;
+		}
+	}
+	
 	public static void main(String[] args) {
 		try {
 			Main pgm = new Main();
@@ -270,17 +291,7 @@ public class Main {
 					while (flag == false) {
 						System.out.println("Enter Patient's new First Name.");
 						fname = sc.next();
-						System.out.println("You entered: " + fname + ". Is this correct?");
-						System.out.println("1. Correct");
-						System.out.println("2. Incorrect");
-
-						userInput = sc.next(); //user input validation, correct or incorrect
-
-						if (userInput.equals("1")) {
-							flag = true; //exit loop
-						} else if (userInput.equals("2")) {
-							flag = false; //loop
-						}
+						flag = verifyUserInput(fname);
 					}//end while
 
 					statement.setString(1, fname);
@@ -297,17 +308,7 @@ public class Main {
 					while (flag == false) {
 						System.out.println("Enter Patient's new Last Name.");
 						lname = sc.next();
-						System.out.println("You entered: " + lname + ". Is this correct?");
-						System.out.println("1. Correct");
-						System.out.println("2. Incorrect");
-
-						userInput = sc.next(); //user input validation, correct or incorrect
-
-						if (userInput.equals("1")) {
-							flag = true; //exit loop
-						} else if (userInput.equals("2")) {
-							flag = false; //loop
-						}
+						flag = verifyUserInput(lname);
 					}//end while
 
 					statement.setString(1, lname);
@@ -316,7 +317,7 @@ public class Main {
 				}
 				else if(userInput.equals("3")) {
 
-					String qry = "UPDATE PATIENT set minit = ? where minit = ?"; //update patient minit based on patient ID
+					String qry = "UPDATE PATIENT set minit = ? where patient = ?"; //update patient minit based on patient ID
 					PreparedStatement statement = con.prepareStatement(qry);
 
 					String minit = "";
@@ -324,17 +325,7 @@ public class Main {
 					while (flag == false) {
 						System.out.println("Enter Patient's new middle initial.");
 						minit = sc.next();
-						System.out.println("You entered: " + minit + ". Is this correct?");
-						System.out.println("1. Correct");
-						System.out.println("2. Incorrect");
-
-						userInput = sc.next(); //user input validation, correct or incorrect
-
-						if (userInput.equals("1")) {
-							flag = true; //exit loop
-						} else if (userInput.equals("2")) {
-							flag = false; //loop
-						}
+						flag = verifyUserInput(minit);
 					}//end while
 
 					statement.setString(1, minit);
@@ -351,19 +342,8 @@ public class Main {
 					while (flag == false) {
 						System.out.println("Enter Patient's new Date of Birth. (YYYY-MM-DD)");
 						dob = sc.next();
-						System.out.println("You entered: " + dob + ". Is this correct?");
-						System.out.println("1. Correct");
-						System.out.println("2. Incorrect");
-
-						userInput = sc.next(); //user input validation, correct or incorrect
-
-						if (userInput.equals("1")) {
-							flag = true; //exit loop
-						} else if (userInput.equals("2")) {
-							flag = false; //loop
-						}
+						flag = verifyUserInput(dob);
 					}//end while
-
 					statement.setDate(1, Date.valueOf(dob));
 					statement.setInt(2, patientID);
 					statement.executeUpdate();
