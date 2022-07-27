@@ -55,7 +55,7 @@ public class Main {
 
 	public void createActivePatientReport() throws SQLException {
 		// TODO: are active patients really ones that have outstanding bills? or should it based on upcoming appts or something similar?
-		String qry = "SELECT * FROM PATIENT WHERE patientid = (SELECT (pid) FROM BILL WHERE amount > 0)";
+		String qry = "SELECT * FROM PATIENT";
 
 		PreparedStatement statement = con.prepareStatement(qry);
 
