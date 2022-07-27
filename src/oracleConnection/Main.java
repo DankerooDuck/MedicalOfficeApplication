@@ -238,73 +238,39 @@ public class Main {
 			userInput = sc.next();
 			if(userInput.equals("1")) {
 				//Scanner sc = new Scanner(System.in);
-				String qry = "INSERT INTO PATIENT (patient, fname, minit, lname, dob ) VALUES (?,?,?,?,?)";
+				String qry = "INSERT INTO PATIENT (fname, minit, lname, dob ) VALUES (?,?,?,?)";
 				PreparedStatement statement = null;
 				statement = con.prepareStatement(qry);
 
-				System.out.println("Enter patientID:");
-				statement.setInt(1, sc.nextInt());
-
 				System.out.println("Enter patient first name:");
-				statement.setString(2, sc.next());
+				statement.setString(1, sc.next());
 
 				System.out.println("Enter patient last name:");
-				statement.setString(3, sc.next());
+				statement.setString(2, sc.next());
 
 				System.out.println("Enter patient Middle Initial:");
-				statement.setString(4, sc.next());
+				statement.setString(3, sc.next());
 
 				System.out.println("Enter patient date of birth: (YYYY-MM-DD)");
-				statement.setDate(5, Date.valueOf(sc.next())); //Date format Example: YYYY-MM-DD
+				statement.setDate(4, Date.valueOf(sc.next())); //Date format Example: YYYY-MM-DD
 
 				statement.execute();
 			}
 			else if(userInput.equals("2"))
 			{
 				//ask user for patient id they wish to edit
-				int patientID = 0;
 				System.out.println("Enter existing patient ID:");
-				patientID = sc.nextInt();
+				int patientID = sc.nextInt();
 
 				System.out.println("What do you want to update:");
-				System.out.println("1. Patient ID");
-				System.out.println("2. First Name");
-				System.out.println("3. Last Name");
-				System.out.println("4. Middle Initial");
-				System.out.println("5. Date of Birth");
-				System.out.println("6. Back");
+				System.out.println("1. First Name");
+				System.out.println("2. Last Name");
+				System.out.println("3. Middle Initial");
+				System.out.println("4. Date of Birth");
+				System.out.println("5. Back");
 				userInput = sc.next();
 
-				//UPDATE PATIENT ID
 				if(userInput.equals("1")) {
-
-					String qry = "UPDATE PATIENT set patient = ? where patient = ?"; //update patientid from patient id
-					PreparedStatement statement = con.prepareStatement(qry);
-
-					int newPatientID = 0;
-					Boolean flag = false; //loop if flag false, if user selects correct -> boolean == true -> exit loop
-					while (flag == false) {
-						System.out.println("Input new Patient ID:"); //new doctor id
-						newPatientID = sc.nextInt();
-						System.out.println("You entered: " + newPatientID + ". Is this correct?");
-						System.out.println("1. Correct");
-						System.out.println("2. Incorrect");
-
-						userInput = sc.next(); //user input validation, correct or incorrect
-
-						if (userInput.equals("1")) {
-							flag = true; //exit loop
-						} else if (userInput.equals("2")) {
-							flag = false; //loop input doctor id
-						}
-					}//end while
-
-					statement.setInt(1, newPatientID);
-					statement.setInt(2, patientID);
-					statement.executeUpdate();
-				} //UPDATE PATIENT FNAME
-				else if(userInput.equals("2")) {
-
 					String qry = "UPDATE PATIENT set fname = ? where patient = ?"; //update fname record from patient ID. EX. UPDATE PATIENT set minit = t WHERE patient = 123
 					PreparedStatement statement = con.prepareStatement(qry);
 
@@ -330,7 +296,7 @@ public class Main {
 					statement.setInt(2, patientID);
 					statement.executeUpdate();
 				} //UPDATE PATIENT LNAME
-				else if(userInput.equals("3")) {
+				else if(userInput.equals("2")) {
 
 					String qry = "UPDATE PATIENT set lname = ? where patient = ?"; //updates patient lname based on patient ID
 					PreparedStatement statement = con.prepareStatement(qry);
@@ -357,7 +323,7 @@ public class Main {
 					statement.setInt(2, patientID);
 					statement.executeUpdate();
 				}
-				else if(userInput.equals("4")) {
+				else if(userInput.equals("3")) {
 
 					String qry = "UPDATE PATIENT set minit = ? where minit = ?"; //update patient minit based on patient ID
 					PreparedStatement statement = con.prepareStatement(qry);
@@ -384,7 +350,7 @@ public class Main {
 					statement.setInt(2, patientID);
 					statement.executeUpdate();
 				}
-				else if(userInput.equals("5")) {
+				else if(userInput.equals("4")) {
 
 					String qry = "UPDATE PATIENT set dob = ? where patient = ?"; //update patient dob based on patient id
 					PreparedStatement statement = con.prepareStatement(qry);
@@ -411,7 +377,7 @@ public class Main {
 					statement.setInt(2, patientID);
 					statement.executeUpdate();
 				}
-				else if(userInput.equals("6")) {
+				else if(userInput.equals("5")) {
 					//back choice
 				}
 			}
@@ -442,51 +408,35 @@ public class Main {
 			userInput = sc.next();
 			if(userInput.equals("1")) {
 
-				String qry = "INSERT INTO DOCTOR (doctorid, fname, lname, minit ) VALUES (?,?,?,?)";
-				PreparedStatement statement = null;
-				statement = con.prepareStatement(qry);
+				String qry = "INSERT INTO DOCTOR (fname, lname, minit) VALUES (?,?,?)";
 
-				System.out.println("Enter doctorID:");
-				statement.setInt(1, sc.nextInt());
+				PreparedStatement statement = con.prepareStatement(qry);
 
 				System.out.println("Enter doctor first name:");
-				statement.setString(2, sc.next());
+				statement.setString(1, sc.next());
 
 				System.out.println("Enter doctor last name:");
-				statement.setString(3, sc.next());
+				statement.setString(2, sc.next());
 
 				System.out.println("Enter doctor middle initial:");
-				statement.setString(4, sc.next());
+				statement.setString(3, sc.next());
 
 				statement.execute();
 				con.close();
 			}
 			else if(userInput.equals("2"))
 			{
-				int doctorID = 0;
 				System.out.println("Enter existing Doctor ID:");
-				doctorID = sc.nextInt();
+				int doctorID = sc.nextInt();
 
 				System.out.println("What do you want to update:");
-				System.out.println("1. Doctor ID");
-				System.out.println("2. First Name");
-				System.out.println("3. Last Name");
-				System.out.println("4. Middle Initial");
-				System.out.println("5. Back");
+				System.out.println("1. First Name");
+				System.out.println("2. Last Name");
+				System.out.println("3. Middle Initial");
+				System.out.println("4. Back");
 				userInput = sc.next();
+
 				if(userInput.equals("1")) {
-
-					String qry = "UPDATE DOCTOR set doctorid = ? where doctorid = ?";
-					PreparedStatement statement = con.prepareStatement(qry);
-
-					System.out.println("Enter Doctor's new ID.");
-
-					statement.setInt(1, sc.nextInt());
-					statement.setInt(2, doctorID);
-					statement.executeUpdate();
-				}
-				else if(userInput.equals("2")) {
-
 					String qry = "UPDATE DOCTOR set fname = ? where doctorid = ?";
 					PreparedStatement statement = con.prepareStatement(qry);
 
@@ -495,7 +445,7 @@ public class Main {
 					statement.setInt(2, doctorID);
 					statement.executeUpdate();
 				}
-				else if(userInput.equals("3")) {
+				else if(userInput.equals("2")) {
 
 					String qry = "UPDATE DOCTOR set lname = ? where doctorid = ?";
 					PreparedStatement statement = con.prepareStatement(qry);
@@ -505,7 +455,7 @@ public class Main {
 					statement.setInt(2, doctorID);
 					statement.executeUpdate();
 				}
-				else if(userInput.equals("4")) {
+				else if(userInput.equals("3")) {
 
 					String qry = "UPDATE DOCTOR set minit = ? where doctorid = ?";
 					PreparedStatement statement = con.prepareStatement(qry);
@@ -515,7 +465,7 @@ public class Main {
 					statement.setInt(2, doctorID);
 					statement.executeUpdate();
 				}
-				else if(userInput.equals("5")) {
+				else if(userInput.equals("4")) {
 					//skip logic and return to previous menu
 				}
 			}
@@ -548,21 +498,17 @@ public class Main {
 
 			if(userInput.equals("1"))
 			{
-				String qry = "INSERT INTO APPOINTMENT (apptid, datetime, PATIENTS_PATIENTID, DOCTORS_DOCTORID ) VALUES (?,?,?,?)";
-				PreparedStatement statement = null;
-				statement = con.prepareStatement(qry);
-
-				System.out.println("Enter Appointment ID:");
-				statement.setInt(1, sc.nextInt());
+				String qry = "INSERT INTO APPOINTMENT (datetime, PATIENTS_PATIENTID, DOCTORS_DOCTORID ) VALUES (?,?,?)";
+				PreparedStatement statement = con.prepareStatement(qry);
 
 				System.out.println("Enter Date/Time: (YYYY-MM-DD)");
-				statement.setDate(2, Date.valueOf(sc.next())); //Date format Example: YYYY-MM-DD
+				statement.setDate(1, Date.valueOf(sc.next())); //Date format Example: YYYY-MM-DD
 
 				System.out.println("Enter patientID:");
-				statement.setInt(3, sc.nextInt());
+				statement.setInt(2, sc.nextInt());
 
 				System.out.println("Enter doctorID:");
-				statement.setInt(4, sc.nextInt());
+				statement.setInt(3, sc.nextInt());
 
 				statement.execute();
 				con.close();
@@ -570,24 +516,9 @@ public class Main {
 			else if(userInput.equals("2"))
 			{
 				System.out.println("What do you want to update:");
-				System.out.println("1. Appointment ID.");
-				System.out.println("2. Appointment Date/Time (YYYY-MM-DD).");
+				System.out.println("1. Appointment Date/Time (YYYY-MM-DD).");
 				userInput = sc.next();
 				if(userInput.equals("1")) {
-
-					String qry = "UPDATE APPOINTMENT set apptid = ? where apptid = ?";
-					PreparedStatement statement = con.prepareStatement(qry);
-
-					System.out.println("Enter appointment's new ID.");
-					statement.setInt(1, sc.nextInt());
-
-					System.out.println("Enter appointment's old ID.");
-					statement.setInt(2, sc.nextInt());
-
-					statement.executeUpdate();
-				}
-				else if(userInput.equals("2")) {
-
 					String qry = "UPDATE APPOINTMENT set datetime = ? where datetime = ?"; // 2000-01-01   2022-10-11
 					PreparedStatement statement = con.prepareStatement(qry);
 
@@ -660,12 +591,8 @@ public class Main {
 				//the application can then decode it to determine both the items and the price
 				//42133 = Consultation, Immunization, Checkup, Prescription, Prescription
 				//the number above, NOT AN INTEGER, but STRING (could be single characters too) is the itemized bill.
-				String qry = "INSERT INTO Bill (billid, amountdue, items, VISIT_APPOINTMENTS_APPTID, VISITS_VISITID ) VALUES (?,?,?,?,?)";
-				PreparedStatement statement = null;
-				statement = con.prepareStatement(qry);
-
-				System.out.println("Enter Bill ID:");
-				statement.setInt(1, sc.nextInt());
+				String qry = "INSERT INTO Bill (amountdue, items, VISIT_APPOINTMENTS_APPTID, VISITS_VISITID ) VALUES (?,?,?,?)";
+				PreparedStatement statement = con.prepareStatement(qry);
 
 				//STRING OF NUMBERS TO ITEMIZE A BILL
 				String bill = "";
@@ -712,15 +639,15 @@ public class Main {
 				}
 				billDecode(bill); //bill = items, its a String
 
-				statement.setInt(2, total); //amount due
+				statement.setInt(1, total); //amount due
 
-				statement.setString(3, bill); //extra tuple in BILL that is String
+				statement.setString(2, bill); //extra tuple in BILL that is String
 
 				System.out.println("Enter appointment ID:");
-				statement.setInt(4, sc.nextInt());
+				statement.setInt(3, sc.nextInt());
 
 				System.out.println("Enter Visit ID:");
-				statement.setInt(5, sc.nextInt());
+				statement.setInt(4, sc.nextInt());
 
 				statement.execute();
 				con.close();
@@ -728,24 +655,9 @@ public class Main {
 			else if(userInput.equals("2"))
 			{
 				System.out.println("What do you want to update:");
-				System.out.println("1. Bill ID.");
-				System.out.println("2. Bill Amount Due.");
+				System.out.println("1. Bill Amount Due.");
 				userInput = sc.next();
 				if(userInput.equals("1")) {
-
-					String qry = "UPDATE BILL set billid = ? where billid = ?";
-					PreparedStatement statement = con.prepareStatement(qry);
-
-					System.out.println("Enter bill's new ID.");
-					statement.setInt(1, sc.nextInt());
-
-					System.out.println("Enter bill's old ID.");
-					statement.setInt(2, sc.nextInt());
-
-					statement.executeUpdate();
-				}
-				else if(userInput.equals("2")) {
-
 					String qry = "UPDATE BILL set amountdue = ? where billid = ?";
 					PreparedStatement statement = con.prepareStatement(qry);
 
