@@ -168,7 +168,7 @@ public class Main {
 	}
 
 	//Main menu
-	void /*int*/ MainMenu () throws SQLException {
+	void MainMenu () throws SQLException {
 		String userInput = "";
 		Scanner sc = new Scanner(System.in);
 		while(true) {
@@ -198,7 +198,6 @@ public class Main {
 				con.close();
 				System.exit(0);
 			}
-			//return 0;
 		}
 	}
 
@@ -244,118 +243,118 @@ public class Main {
 		try {
 			String userInput = "";
 			Scanner sc = new Scanner(System.in);
-			System.out.println("1. Create new Patient");
-			System.out.println("2. Update existing Patient");
-			System.out.println("3. Back");
-			userInput = sc.next();
-			if(userInput.equals("1")) {
-				//Scanner sc = new Scanner(System.in);
-				String qry = "INSERT INTO PATIENT (fname, minit, lname, dob ) VALUES (?,?,?,?)";
-				PreparedStatement statement = null;
-				statement = con.prepareStatement(qry);
-
-				System.out.println("Enter patient first name:");
-				statement.setString(1, sc.next());
-
-				System.out.println("Enter patient last name:");
-				statement.setString(2, sc.next());
-
-				System.out.println("Enter patient Middle Initial:");
-				statement.setString(3, sc.next());
-
-				System.out.println("Enter patient date of birth: (YYYY-MM-DD)");
-				statement.setDate(4, Date.valueOf(sc.next())); //Date format Example: YYYY-MM-DD
-
-				statement.execute();
-			}
-			else if(userInput.equals("2"))
-			{
-				//ask user for patient id they wish to edit
-				System.out.println("Enter existing patient ID:");
-				int patientID = sc.nextInt();
-
-				System.out.println("What do you want to update:");
-				System.out.println("1. First Name");
-				System.out.println("2. Last Name");
-				System.out.println("3. Middle Initial");
-				System.out.println("4. Date of Birth");
-				System.out.println("5. Back");
+			while(true) {
+				System.out.println("Patient Menu:");
+				System.out.println("1. Create new Patient");
+				System.out.println("2. Update existing Patient");
+				System.out.println("3. Back");
 				userInput = sc.next();
+				if (userInput.equals("1")) {
 
-				if(userInput.equals("1")) {
-					String qry = "UPDATE PATIENT set fname = ? where patient = ?"; //update fname record from patient ID. EX. UPDATE PATIENT set minit = t WHERE patient = 123
-					PreparedStatement statement = con.prepareStatement(qry);
+					String qry = "INSERT INTO PATIENT (fname, minit, lname, dob ) VALUES (?,?,?,?)";
+					PreparedStatement statement = null;
+					statement = con.prepareStatement(qry);
 
-					String fname = "";
-					Boolean flag = false; //loop if flag false, if user selects correct -> boolean == true -> exit loop
-					while (flag == false) {
-						System.out.println("Enter Patient's new First Name.");
-						fname = sc.next();
-						flag = verifyUserInput(fname);
-					}//end while
+					System.out.println("Enter patient first name:");
+					statement.setString(1, sc.next());
 
-					statement.setString(1, fname);
-					statement.setInt(2, patientID);
-					statement.executeUpdate();
-				} //UPDATE PATIENT LNAME
-				else if(userInput.equals("2")) {
+					System.out.println("Enter patient last name:");
+					statement.setString(2, sc.next());
 
-					String qry = "UPDATE PATIENT set lname = ? where patient = ?"; //updates patient lname based on patient ID
-					PreparedStatement statement = con.prepareStatement(qry);
+					System.out.println("Enter patient Middle Initial:");
+					statement.setString(3, sc.next());
 
-					String lname = "";
-					Boolean flag = false; //loop if flag false, if user selects correct -> boolean == true -> exit loop
-					while (flag == false) {
-						System.out.println("Enter Patient's new Last Name.");
-						lname = sc.next();
-						flag = verifyUserInput(lname);
-					}//end while
+					System.out.println("Enter patient date of birth: (YYYY-MM-DD)");
+					statement.setDate(4, Date.valueOf(sc.next())); //Date format Example: YYYY-MM-DD
 
-					statement.setString(1, lname);
-					statement.setInt(2, patientID);
-					statement.executeUpdate();
-				}
-				else if(userInput.equals("3")) {
+					statement.execute();
+				} else if (userInput.equals("2")) {
+					//ask user for patient id they wish to edit
+					System.out.println("Enter existing patient ID:");
+					int patientID = sc.nextInt();
 
-					String qry = "UPDATE PATIENT set minit = ? where patient = ?"; //update patient minit based on patient ID
-					PreparedStatement statement = con.prepareStatement(qry);
+					while (true) {
+						System.out.println("What do you want to update:");
+						System.out.println("1. First Name");
+						System.out.println("2. Last Name");
+						System.out.println("3. Middle Initial");
+						System.out.println("4. Date of Birth");
+						System.out.println("5. Back");
+						userInput = sc.next();
 
-					String minit = "";
-					Boolean flag = false; //loop if flag false, if user selects correct -> boolean == true -> exit loop
-					while (flag == false) {
-						System.out.println("Enter Patient's new middle initial.");
-						minit = sc.next();
-						flag = verifyUserInput(minit);
-					}//end while
+						if (userInput.equals("1")) {
+							String qry = "UPDATE PATIENT set fname = ? where patient = ?"; //update fname record from patient ID. EX. UPDATE PATIENT set minit = t WHERE patient = 123
+							PreparedStatement statement = con.prepareStatement(qry);
 
-					statement.setString(1, minit);
-					statement.setInt(2, patientID);
-					statement.executeUpdate();
-				}
-				else if(userInput.equals("4")) {
+							String fname = "";
+							Boolean flag = false; //loop if flag false, if user selects correct -> boolean == true -> exit loop
+							while (flag == false) {
+								System.out.println("Enter Patient's new First Name.");
+								fname = sc.next();
+								flag = verifyUserInput(fname);
+							}//end while
 
-					String qry = "UPDATE PATIENT set dob = ? where patient = ?"; //update patient dob based on patient id
-					PreparedStatement statement = con.prepareStatement(qry);
+							statement.setString(1, fname);
+							statement.setInt(2, patientID);
+							statement.executeUpdate();
+						} //UPDATE PATIENT LNAME
+						else if (userInput.equals("2")) {
 
-					String dob = "";
-					Boolean flag = false; //loop if flag false, if user selects correct -> boolean == true -> exit loop
-					while (flag == false) {
-						System.out.println("Enter Patient's new Date of Birth. (YYYY-MM-DD)");
-						dob = sc.next();
-						flag = verifyUserInput(dob);
-					}//end while
-					statement.setDate(1, Date.valueOf(dob));
-					statement.setInt(2, patientID);
-					statement.executeUpdate();
-				}
-				else if(userInput.equals("5")) {
-					//back choice
+							String qry = "UPDATE PATIENT set lname = ? where patient = ?"; //updates patient lname based on patient ID
+							PreparedStatement statement = con.prepareStatement(qry);
+
+							String lname = "";
+							Boolean flag = false; //loop if flag false, if user selects correct -> boolean == true -> exit loop
+							while (flag == false) {
+								System.out.println("Enter Patient's new Last Name.");
+								lname = sc.next();
+								flag = verifyUserInput(lname);
+							}//end while
+
+							statement.setString(1, lname);
+							statement.setInt(2, patientID);
+							statement.executeUpdate();
+						} else if (userInput.equals("3")) {
+
+							String qry = "UPDATE PATIENT set minit = ? where patient = ?"; //update patient minit based on patient ID
+							PreparedStatement statement = con.prepareStatement(qry);
+
+							String minit = "";
+							Boolean flag = false; //loop if flag false, if user selects correct -> boolean == true -> exit loop
+							while (flag == false) {
+								System.out.println("Enter Patient's new middle initial.");
+								minit = sc.next();
+								flag = verifyUserInput(minit);
+							}//end while
+
+							statement.setString(1, minit);
+							statement.setInt(2, patientID);
+							statement.executeUpdate();
+						} else if (userInput.equals("4")) {
+
+							String qry = "UPDATE PATIENT set dob = ? where patient = ?"; //update patient dob based on patient id
+							PreparedStatement statement = con.prepareStatement(qry);
+
+							String dob = "";
+							Boolean flag = false; //loop if flag false, if user selects correct -> boolean == true -> exit loop
+							while (flag == false) {
+								System.out.println("Enter Patient's new Date of Birth. (YYYY-MM-DD)");
+								dob = sc.next();
+								flag = verifyUserInput(dob);
+							}//end while
+							statement.setDate(1, Date.valueOf(dob));
+							statement.setInt(2, patientID);
+							statement.executeUpdate();
+						} else if (userInput.equals("5")) {
+							break;
+							//back choice
+						}
+					}
+				} else if (userInput.equals("3")) {
+					break;
+					//skips logic and returns to main menu
 				}
 			}
-			else if(userInput.equals("3")) {
-				//skips logic and returns to main menu
-			}
-
 		}
 		catch (SQLException x)
 		{
@@ -373,75 +372,103 @@ public class Main {
 		try {
 			String userInput = "";
 			Scanner sc = new Scanner(System.in);
-			System.out.println("1. Create new Doctor");
-			System.out.println("2. Update existing Doctor");
-			System.out.println("3. Back");
-			userInput = sc.next();
-			if(userInput.equals("1")) {
-
-				String qry = "INSERT INTO DOCTOR (fname, lname, minit) VALUES (?,?,?)";
-
-				PreparedStatement statement = con.prepareStatement(qry);
-
-				System.out.println("Enter doctor first name:");
-				statement.setString(1, sc.next());
-
-				System.out.println("Enter doctor last name:");
-				statement.setString(2, sc.next());
-
-				System.out.println("Enter doctor middle initial:");
-				statement.setString(3, sc.next());
-
-				statement.execute();
-				con.close();
-			}
-			else if(userInput.equals("2"))
-			{
-				System.out.println("Enter existing Doctor ID:");
-				int doctorID = sc.nextInt();
-
-				System.out.println("What do you want to update:");
-				System.out.println("1. First Name");
-				System.out.println("2. Last Name");
-				System.out.println("3. Middle Initial");
-				System.out.println("4. Back");
+			while (true) {
+				System.out.println("Doctor Menu:");
+				System.out.println("1. Create new Doctor");
+				System.out.println("2. Update existing Doctor");
+				System.out.println("3. Back");
 				userInput = sc.next();
+				if (userInput.equals("1")) {
 
-				if(userInput.equals("1")) {
-					String qry = "UPDATE DOCTOR set fname = ? where doctorid = ?";
+					String qry = "INSERT INTO DOCTOR (fname, lname, minit) VALUES (?,?,?)";
+
 					PreparedStatement statement = con.prepareStatement(qry);
 
-					System.out.println("Enter Doctor's new First Name.");
+					System.out.println("Enter doctor first name:");
 					statement.setString(1, sc.next());
-					statement.setInt(2, doctorID);
-					statement.executeUpdate();
-				}
-				else if(userInput.equals("2")) {
 
-					String qry = "UPDATE DOCTOR set lname = ? where doctorid = ?";
-					PreparedStatement statement = con.prepareStatement(qry);
+					System.out.println("Enter doctor last name:");
+					statement.setString(2, sc.next());
 
-					System.out.println("Enter Doctor's new Last Name.");
-					statement.setString(1, sc.next());
-					statement.setInt(2, doctorID);
-					statement.executeUpdate();
-				}
-				else if(userInput.equals("3")) {
+					System.out.println("Enter doctor middle initial:");
+					statement.setString(3, sc.next());
 
-					String qry = "UPDATE DOCTOR set minit = ? where doctorid = ?";
-					PreparedStatement statement = con.prepareStatement(qry);
+					statement.execute();
 
-					System.out.println("Enter Doctor's new middle initial.");
-					statement.setString(1, sc.next());
-					statement.setInt(2, doctorID);
-					statement.executeUpdate();
+					System.out.println("Doctor successfully created.");
+
+				} else if (userInput.equals("2")) {
+					System.out.println("Enter existing Doctor ID:");
+					int doctorID = sc.nextInt();
+
+					while (true) {
+						System.out.println("Doctor Update Menu");
+						System.out.println("What do you want to update:");
+						System.out.println("1. First Name");
+						System.out.println("2. Last Name");
+						System.out.println("3. Middle Initial");
+						System.out.println("4. Back");
+						userInput = sc.next();
+
+						if (userInput.equals("1")) {
+							String qry = "UPDATE DOCTOR set fname = ? where doctorid = ?";
+							PreparedStatement statement = con.prepareStatement(qry);
+
+							//System.out.println("Enter Doctor's new First Name.");
+							String fname = "";
+							Boolean flag = false; //loop if flag false, if user selects correct -> boolean == true -> exit loop
+							while (flag == false) {
+								System.out.println("Enter Doctor's new First Name.");
+								fname = sc.next();
+								flag = verifyUserInput(fname);
+							}//end while
+							statement.setString(1, fname);
+							statement.setInt(2, doctorID);
+							statement.executeUpdate();
+							System.out.println("Doctor's first name successfully updated.\n");
+						} else if (userInput.equals("2")) {
+
+							String qry = "UPDATE DOCTOR set lname = ? where doctorid = ?";
+							PreparedStatement statement = con.prepareStatement(qry);
+
+							//System.out.println("Enter Doctor's new Last Name.");
+							String lname = "";
+							Boolean flag = false; //loop if flag false, if user selects correct -> boolean == true -> exit loop
+							while (flag == false) {
+								System.out.println("Enter Doctor's new Last Name.");
+								lname = sc.next();
+								flag = verifyUserInput(lname);
+							}//end while
+							statement.setString(1, lname);
+							statement.setInt(2, doctorID);
+							statement.executeUpdate();
+							System.out.println("Doctor's last name successfully updated.\n");
+						} else if (userInput.equals("3")) {
+
+							String qry = "UPDATE DOCTOR set minit = ? where doctorid = ?";
+							PreparedStatement statement = con.prepareStatement(qry);
+
+							//System.out.println("Enter Doctor's new middle initial.");
+							String minit = "";
+							Boolean flag = false; //loop if flag false, if user selects correct -> boolean == true -> exit loop
+							while (flag == false) {
+								System.out.println("Enter Doctor's new middle initial.");
+								minit = sc.next();
+								flag = verifyUserInput(minit);
+							}//end while
+							statement.setString(1, minit);
+							statement.setInt(2, doctorID);
+							statement.executeUpdate();
+							System.out.println("Doctor's middle initial successfully updated.\n");
+						} else if (userInput.equals("4")) {
+							break;
+							//skip logic and return to previous menu
+						}
+					}
+				} else if (userInput.equals("3")) {
+					break;
+					//skips logic and returns to menu
 				}
-				else if(userInput.equals("4")) {
-					//skip logic and return to previous menu
-				}
-			}
-			if(userInput.equals("3")) {
-				//skips logic and returns to menu
 			}
 		}
 		catch (SQLException x)
@@ -460,78 +487,88 @@ public class Main {
 		try {
 			String userInput = "";
 			Scanner sc = new Scanner(System.in);
-			System.out.println("1. Create new Appointment.");
-			System.out.println("2. Update existing Appointment.");
-			System.out.println("3. Bill Appointment");
-			System.out.println("4. Cancel Appointment");
-			System.out.println("5. Back");
-			userInput = sc.next();
-
-			if(userInput.equals("1"))
-			{
-				String qry = "INSERT INTO APPOINTMENT (datetime, PATIENTS_PATIENTID, DOCTORS_DOCTORID ) VALUES (?,?,?)";
-				PreparedStatement statement = con.prepareStatement(qry);
-
-				System.out.println("Enter Date/Time: (YYYY-MM-DD)");
-				statement.setDate(1, Date.valueOf(sc.next())); //Date format Example: YYYY-MM-DD
-
-				System.out.println("Enter patientID:");
-				statement.setInt(2, sc.nextInt());
-
-				System.out.println("Enter doctorID:");
-				statement.setInt(3, sc.nextInt());
-
-				statement.execute();
-				con.close();
-			}
-			else if(userInput.equals("2"))
-			{
-				System.out.println("What do you want to update:");
-				System.out.println("1. Appointment Date/Time (YYYY-MM-DD).");
+			while(true) {
+				System.out.println("Appointment Menu:");
+				System.out.println("1. Create new Appointment.");
+				System.out.println("2. Update existing Appointment.");
+				System.out.println("3. Bill Appointment");
+				System.out.println("4. Cancel Appointment");
+				System.out.println("5. Back");
 				userInput = sc.next();
-				if(userInput.equals("1")) {
-					String qry = "UPDATE APPOINTMENT set datetime = ? where datetime = ?"; // 2000-01-01   2022-10-11
+
+				if (userInput.equals("1")) {
+					String qry = "INSERT INTO APPOINTMENT (datetime, PATIENTS_PATIENTID, DOCTORS_DOCTORID ) VALUES (?,?,?)";
 					PreparedStatement statement = con.prepareStatement(qry);
 
-					System.out.println("Enter appointment's new Date/Time (YYYY-MM-DD).");
-					statement.setDate(1, Date.valueOf(sc.next()));
+					System.out.println("Enter Date/Time: (YYYY-MM-DD)");
+					statement.setDate(1, Date.valueOf(sc.next())); //Date format Example: YYYY-MM-DD
 
-					System.out.println("Enter appointment's old Date/Time (YYYY-MM-DD).");
-					statement.setDate(2, Date.valueOf(sc.next()));
+					System.out.println("Enter patientID:");
+					statement.setInt(2, sc.nextInt());
 
-					statement.executeUpdate();
-				}
-			}
-			if(userInput.equals("3")) {
-				System.out.println("FIXME: LOGIC AND CALL CREATE BILL");
-			}
-			if(userInput.equals("4")) {
-				String qry = "DELETE FROM APPOINTMENT WHERE APPTID = ?";
-				PreparedStatement statement = con.prepareStatement(qry);
+					System.out.println("Enter doctorID:");
+					statement.setInt(3, sc.nextInt());
 
-				int appointmentID = 0;
-				Boolean flag = false; //loop if flag false, if user selects correct -> boolean == true -> exit loop
-				while (flag == false) {
-					System.out.println("Enter the ID of the appointment you wish to DELETE: ");
-					appointmentID = sc.nextInt();
-					System.out.println("Are you sure you want to delete Appointment " + appointmentID + ". Is this correct?");
-					System.out.println("This action CANNOT be undone.");
-					System.out.println("1. Correct");
-					System.out.println("2. Incorrect");
+					statement.execute();
 
-					userInput = sc.next(); //user input validation, correct or incorrect
+					System.out.println("Appointment successfully created\n");
 
+				} else if (userInput.equals("2")) {
+					System.out.println("What do you want to update:");
+					System.out.println("1. Appointment Date/Time (YYYY-MM-DD).");
+					userInput = sc.next();
 					if (userInput.equals("1")) {
-						flag = true; //exit loop
-					} else if (userInput.equals("2")) {
-						flag = false; //loop input
+						//String qry = "UPDATE APPOINTMENT set datetime = ? where datetime = ?";
+						String qry = "UPDATE APPOINTMENT set datetime = ? where apptid = ?";
+						PreparedStatement statement = con.prepareStatement(qry);
+
+						System.out.println("Enter appointment's new Date/Time (YYYY-MM-DD).");
+						statement.setDate(1, Date.valueOf(sc.next()));
+
+					/*System.out.println("Enter appointment's old Date/Time (YYYY-MM-DD).");
+					statement.setDate(2, Date.valueOf(sc.next()));*/
+
+						System.out.println("Enter appointment's ID.");
+						statement.setInt(2, sc.nextInt());
+
+						statement.executeUpdate();
+
+						System.out.println("Appointment successfully updated.\n");
 					}
-				}//end while
-				statement.setInt(1, appointmentID);
-				statement.executeUpdate();
-			}
-			if(userInput.equals("5")) {
-				//skips logic and returns to menu
+				}
+				if (userInput.equals("3")) {
+					System.out.println("FIXME: LOGIC AND CALL CREATE BILL");
+				}
+				if (userInput.equals("4")) {
+					String qry = "DELETE FROM APPOINTMENT WHERE APPTID = ?";
+					PreparedStatement statement = con.prepareStatement(qry);
+
+					int appointmentID = 0;
+					Boolean flag = false; //loop if flag false, if user selects correct -> boolean == true -> exit loop
+					while (flag == false) {
+						System.out.println("Enter the ID of the appointment you wish to DELETE: ");
+						appointmentID = sc.nextInt();
+						System.out.println("Are you sure you want to delete Appointment " + appointmentID + ". Is this correct?");
+						System.out.println("This action CANNOT be undone.");
+						System.out.println("1. Correct");
+						System.out.println("2. Incorrect");
+
+						userInput = sc.next(); //user input validation, correct or incorrect
+
+						if (userInput.equals("1")) {
+							flag = true; //exit loop
+						} else if (userInput.equals("2")) {
+							flag = false; //loop input
+						}
+					}//end while
+					statement.setInt(1, appointmentID);
+					statement.executeUpdate();
+					System.out.println("Appointment successfully cancelled.\n");
+				}
+				if (userInput.equals("5")) {
+					break;
+					//skips logic and returns to menu
+				}
 			}
 		}
 		catch (SQLException x)
@@ -542,6 +579,10 @@ public class Main {
 		{
 			System.out.println("setInt throws NULL pointer exception");
 		}
+		catch (IllegalArgumentException IAE) // thrown by valueOf()
+		{
+			System.out.println("Incorrect Date format. Try Again!");
+		}
 		return 0;
 	}
 
@@ -550,6 +591,7 @@ public class Main {
 		try {
 			String userInput = "";
 			Scanner sc = new Scanner(System.in);
+			System.out.println("Bill Menu:");
 			System.out.println("1. Create new Bill.");
 			System.out.println("2. Update existing Bill.");
 			System.out.println("3. Back");
@@ -658,6 +700,7 @@ public class Main {
 		}
 		return 0;
 	}
+
 }
 
 
