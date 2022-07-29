@@ -29,6 +29,7 @@ public class Main {
 
 			System.out.println();
 		}
+		System.out.println("---------------------");
 	}
 
 	void billDecode(String bill) {
@@ -38,22 +39,22 @@ public class Main {
 		char[] ch = bill.toCharArray();
 		for (int i = 0; i < billLen; i++) {
 			switch(ch[i]) {
-			case '1':
-				System.out.println("Checkup - $250");
-				total += 250;
-				break;
-			case '2':
-				System.out.println("Immunization - $125");
-				total += 125;
-				break;
-			case '3':
-				System.out.println("Prescription - $40");
-				total += 40;
-				break;
-			case '4':
-				total += 200;
-				System.out.println("Consultation - $200");
-				break;
+				case '1':
+					System.out.println("Checkup - $250");
+					total += 250;
+					break;
+				case '2':
+					System.out.println("Immunization - $125");
+					total += 125;
+					break;
+				case '3':
+					System.out.println("Prescription - $40");
+					total += 40;
+					break;
+				case '4':
+					total += 200;
+					System.out.println("Consultation - $200");
+					break;
 			}//end switch
 		}//end for loop
 		System.out.println("Total: $" + total);
@@ -75,6 +76,8 @@ public class Main {
 	}
 
 	public void createUnpaidBillsReport() throws SQLException {
+		System.out.println("\nUNPAID BILL(S) REPORT:");
+		System.out.println("---------------------");
 		String qry = "SELECT * FROM BILL WHERE amountdue > 0";
 
 		PreparedStatement statement = con.prepareStatement(qry);
@@ -88,6 +91,8 @@ public class Main {
 	}
 
 	public void createPaidBillsReports() throws SQLException {
+		System.out.println("\nPAID BILL(S) REPORT:");
+		System.out.println("---------------------");
 		String qry = "SELECT * FROM BILL WHERE amountdue = 0";
 
 		PreparedStatement statement = con.prepareStatement(qry);
@@ -101,6 +106,8 @@ public class Main {
 	}
 
 	public void createActivePatientReport() throws SQLException {
+		System.out.println("\nACTIVE PATIENT(S) REPORT:");
+		System.out.println("---------------------");
 		// TODO: are active patients really ones that have outstanding bills? or should it based on upcoming appts or something similar?
 		String qry = "SELECT * FROM PATIENT";
 
@@ -115,6 +122,8 @@ public class Main {
 	}
 
 	public void createActiveDoctorReport() throws SQLException {
+		System.out.println("\nACTIVE DOCTOR(S) REPORT:");
+		System.out.println("---------------------");
 		// TODO: broken query
 		String qry = "SELECT * FROM DOCTOR";
 
@@ -148,7 +157,7 @@ public class Main {
 			return null;
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		try {
 			Main pgm = new Main();
@@ -204,6 +213,7 @@ public class Main {
 	private void Create_Reports() {
 		Scanner sc = new Scanner(System.in);
 
+		System.out.println("Reports Menu:");
 		System.out.println("1. Outstanding Appointments.");
 		System.out.println("2. Unpaid Bills");
 		System.out.println("3. Paid Bills");
@@ -239,7 +249,7 @@ public class Main {
 	}
 
 	// Create or update Patient
-	int Create_Update_Patient() {
+	void Create_Update_Patient() {
 		try {
 			String userInput = "";
 			Scanner sc = new Scanner(System.in);
@@ -364,11 +374,10 @@ public class Main {
 		{
 			System.out.println("NUll pointer exception");
 		}
-		return 0;
 	}
 
 	// Create or update Doctor
-	int Create_Update_Doctor() {
+	void Create_Update_Doctor() {
 		try {
 			String userInput = "";
 			Scanner sc = new Scanner(System.in);
@@ -479,11 +488,10 @@ public class Main {
 		{
 			System.out.println("setInt throws NULL pointer exception");
 		}
-		return 0;
 	}
 
 	// Create or update appointment
-	int Create_Update_Appointment() {
+	void Create_Update_Appointment() {
 		try {
 			String userInput = "";
 			Scanner sc = new Scanner(System.in);
@@ -537,7 +545,11 @@ public class Main {
 					}
 				}
 				if (userInput.equals("3")) {
-					System.out.println("FIXME: LOGIC AND CALL CREATE BILL");
+
+					Create_Update_Bill();
+
+					//System.out.println("FIXME: LOGIC AND CALL CREATE BILL\n");
+
 				}
 				if (userInput.equals("4")) {
 					String qry = "DELETE FROM APPOINTMENT WHERE APPTID = ?";
@@ -583,18 +595,19 @@ public class Main {
 		{
 			System.out.println("Incorrect Date format. Try Again!");
 		}
-		return 0;
 	}
 
 	// Create or update bill
-	int Create_Update_Bill() {
+	void Create_Update_Bill() {
 		try {
 			String userInput = "";
 			Scanner sc = new Scanner(System.in);
 			System.out.println("Bill Menu:");
 			System.out.println("1. Create new Bill.");
 			System.out.println("2. Update existing Bill.");
-			System.out.println("3. Back");
+			System.out.println("3. Direct Payment.");
+			System.out.println("4. Submit a claim.");
+			System.out.println("5. Back");
 			userInput = sc.next();
 
 			if(userInput.equals("1"))
@@ -604,7 +617,8 @@ public class Main {
 				//the application can then decode it to determine both the items and the price
 				//42133 = Consultation, Immunization, Checkup, Prescription, Prescription
 				//the number above, NOT AN INTEGER, but STRING (could be single characters too) is the itemized bill.
-				String qry = "INSERT INTO Bill (amountdue, items, VISIT_APPOINTMENTS_APPTID, VISITS_VISITID ) VALUES (?,?,?,?)";
+				//String qry = "INSERT INTO Bill (amountdue, items, VISIT_APPOINTMENTS_APPTID, VISITS_VISITID ) VALUES (?,?,?,?)";
+				String qry = "INSERT INTO Bill (amountdue, items, VISIT_APPOINTMENTS_APPTID) VALUES (?,?,?)";
 				PreparedStatement statement = con.prepareStatement(qry);
 
 				//STRING OF NUMBERS TO ITEMIZE A BILL
@@ -659,11 +673,11 @@ public class Main {
 				System.out.println("Enter appointment ID:");
 				statement.setInt(3, sc.nextInt());
 
-				System.out.println("Enter Visit ID:");
-				statement.setInt(4, sc.nextInt());
+				/*System.out.println("Enter Visit ID:");
+				statement.setInt(4, sc.nextInt());*/
 
 				statement.execute();
-				con.close();
+
 			}
 			else if(userInput.equals("2"))
 			{
@@ -674,7 +688,7 @@ public class Main {
 					String qry = "UPDATE BILL set amountdue = ? where billid = ?";
 					PreparedStatement statement = con.prepareStatement(qry);
 
-					System.out.println("Enter bill's new mount due.");
+					System.out.println("Enter bill's new amount due.");
 					statement.setInt(1, sc.nextInt());
 
 					/*System.out.println("Enter bill's old amount due.");
@@ -686,7 +700,16 @@ public class Main {
 					statement.executeUpdate();
 				}
 			}
-			if(userInput.equals("3")) {
+			if(userInput.equals("3"))
+			{
+				Direct_Payment();
+			}
+			if(userInput.equals("4"))
+			{
+				Create_Claim();
+			}
+			if(userInput.equals("5"))
+			{
 				//skips logic and returns to menu
 			}
 		}
@@ -698,9 +721,97 @@ public class Main {
 		{
 			System.out.println("setInt throws NULL pointer exception");
 		}
-		return 0;
 	}
 
+	//Patient Direct Payment
+	void Direct_Payment() throws SQLException {
+
+		Scanner sc = new Scanner(System.in);
+		System.out.println();
+		createUnpaidBillsReport();
+
+		System.out.print("Enter Patient's bill ID: ");
+		int billid = sc.nextInt();
+
+		System.out.print("Enter Patients payment amount: $");
+		int paidamount = sc.nextInt();
+
+		String qry = "SELECT amountdue FROM BILL WHERE amountdue > 0 and billid = ?";
+		PreparedStatement statement = con.prepareStatement(qry);
+
+		//System.out.print("Enter bill's ID: ");
+		//int billid = sc.nextInt();
+		statement.setInt(1, billid);
+
+		ResultSet r = statement.executeQuery();
+		while(r.next())
+		{
+			int amountdue = r.getInt(1);
+
+			Payment_Calculator(amountdue, paidamount, billid);
+		}
+	}
+
+	// TODO: fix database claim table
+	void Create_Claim() throws SQLException {
+			String userInput = "";
+			Scanner sc = new Scanner(System.in);
+			while (true) {
+				System.out.println("Claim Menu:");
+				System.out.println("1. Create new Claim");
+				System.out.println("2. Update existing Claim");
+				System.out.println("3. Back");
+				userInput = sc.next();
+				if (userInput.equals("1")) {
+
+					String qry = "INSERT INTO CLAIM () VALUES ()";
+					PreparedStatement statement = null;
+					statement = con.prepareStatement(qry);
+
+					System.out.println("Enter patient :");
+					statement.setString(1, sc.next());
+
+					System.out.println("Enter patient :");
+					statement.setString(2, sc.next());
+
+					System.out.println("Enter patient :");
+					statement.setString(3, sc.next());
+
+					statement.execute();
+				}
+			}
+		}
+
+	// Calculate remaining balance after payment
+	// Updates bills amountdue in the database
+	void Payment_Calculator(int amountDue, int paidAmount, int billid) throws SQLException {
+
+		int amountUnpaid = 0;
+
+		amountUnpaid = amountDue - paidAmount;
+
+		//UPDATE BILL
+		String qry = "UPDATE BILL set amountdue = ? where billid = ?";
+		PreparedStatement statement = con.prepareStatement(qry);
+
+		statement.setInt(1, amountUnpaid);
+
+		statement.setInt(2, billid);
+		statement.executeUpdate();
+
+		//SELECT BILL REMAINING BALANCE
+		qry = "SELECT amountdue FROM BILL WHERE billid = ?";
+		statement = con.prepareStatement(qry);
+
+		statement.setInt(1, billid);
+
+		ResultSet r = statement.executeQuery();
+		while(r.next())
+		{
+			int newAmountDue = r.getInt(1);
+			System.out.print("Remaining Balance: $" + newAmountDue + "\n");
+		}
+	}
 }
 
 
