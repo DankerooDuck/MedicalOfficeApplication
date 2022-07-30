@@ -699,7 +699,7 @@ public class Main {
 			}
 			if(userInput.equals("4"))
 			{
-				Create_Claim();
+                Create_Update_Submit_Claim();
 			}
 			if(userInput.equals("5"))
 			{
@@ -716,64 +716,51 @@ public class Main {
 		}
 	}
 
-	//Patient Direct Payment
-	void Direct_Payment() throws SQLException {
+    // fixme: What are the necessary attributes for the claim table?
+    void Create_Update_Submit_Claim() throws SQLException {
+        String userInput = "";
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            System.out.println("\nClaim Menu:");
+            System.out.println("1. Create new Claim");
+            System.out.println("2. Update existing Claim");
+            System.out.println("3. Submit Claim");
+            System.out.println("4. Back");
+            userInput = sc.next();
+            if (userInput.equals("1")) {
 
-		Scanner sc = new Scanner(System.in);
-		System.out.println();
-		createUnpaidBillsReport();
+                String qry = "INSERT INTO CLAIM (claimid, insuranceid, patients_patientid, claimamount, billid) VALUES (?,?,?,?,?)";
+                PreparedStatement statement = null;
+                statement = con.prepareStatement(qry);
 
-		System.out.print("Enter Patient's bill ID: ");
-		int billid = sc.nextInt();
+                System.out.print("Enter Claim ID: ");
+                statement.setInt(1, sc.nextInt());
 
-		System.out.print("Enter Patients payment amount: $");
-		int paidamount = sc.nextInt();
+                System.out.print("Enter Patient's Insurance ID: ");
+                statement.setInt(2, sc.nextInt());
 
-		String qry = "SELECT amountdue FROM BILL WHERE amountdue > 0 and billid = ?";
-		PreparedStatement statement = con.prepareStatement(qry);
+                System.out.print("Enter Patient's ID: ");
+                statement.setInt(3, sc.nextInt());
 
-		//System.out.print("Enter bill's ID: ");
-		//int billid = sc.nextInt();
-		statement.setInt(1, billid);
+                System.out.print("Enter Claim Amount $: ");
+                statement.setInt(4, sc.nextInt());
 
-		ResultSet r = statement.executeQuery();
-		while(r.next())
-		{
-			int amountdue = r.getInt(1);
+                System.out.print("Enter Bill ID: ");
+                statement.setInt(5, sc.nextInt());
 
-			Payment_Calculator(amountdue, paidamount, billid);
-		}
-	}
-
-	// TODO: fix database claim table
-	void Create_Claim() throws SQLException {
-			String userInput = "";
-			Scanner sc = new Scanner(System.in);
-			while (true) {
-				System.out.println("Claim Menu:");
-				System.out.println("1. Create new Claim");
-				System.out.println("2. Update existing Claim");
-				System.out.println("3. Back");
-				userInput = sc.next();
-				if (userInput.equals("1")) {
-
-					String qry = "INSERT INTO CLAIM () VALUES ()";
-					PreparedStatement statement = null;
-					statement = con.prepareStatement(qry);
-
-					System.out.println("Enter patient :");
-					statement.setString(1, sc.next());
-
-					System.out.println("Enter patient :");
-					statement.setString(2, sc.next());
-
-					System.out.println("Enter patient :");
-					statement.setString(3, sc.next());
-
-					statement.execute();
-				}
-			}
-		}
+                statement.execute();
+            }
+            if(userInput.equals("3"))
+            {
+                Claim_Payment();
+            }
+            if(userInput.equals("4"))
+            {
+                //Go Back to Main menu
+                break;
+            }
+        }
+    }
 
 	//input is a hardcoded integer for switch below
 	//each case calls verifyUserInput()
@@ -984,7 +971,36 @@ public class Main {
 	void blankLine() {
 		System.out.println("");
 	}
-	
+
+    //Patient Direct Payment
+    void Direct_Payment() throws SQLException {
+
+        Scanner sc = new Scanner(System.in);
+        System.out.println();
+        createUnpaidBillsReport();
+
+        System.out.print("Enter Patient's bill ID: ");
+        int billid = sc.nextInt();
+
+        System.out.print("Enter Patients payment amount: $");
+        int paidamount = sc.nextInt();
+
+        String qry = "SELECT amountdue FROM BILL WHERE amountdue > 0 and billid = ?";
+        PreparedStatement statement = con.prepareStatement(qry);
+
+        //System.out.print("Enter bill's ID: ");
+        //int billid = sc.nextInt();
+        statement.setInt(1, billid);
+
+        ResultSet r = statement.executeQuery();
+        while(r.next())
+        {
+            int amountdue = r.getInt(1);
+
+            Payment_Calculator(amountdue, paidamount, billid);
+        }
+    }
+
 	// Calculate remaining balance after payment
 	// Updates bills amountdue in the database
 	void Payment_Calculator(int amountDue, int paidAmount, int billid) throws SQLException {
@@ -1015,6 +1031,63 @@ public class Main {
 			System.out.print("Remaining Balance: $" + newAmountDue + "\n");
 		}
 	}
+
+    // FIXME: trying to make claim amount be paid by insurance
+    void Claim_Payment() throws SQLException {
+
+        Scanner sc = new Scanner(System.in);
+        System.out.println();
+        createUnpaidBillsReport();
+
+        System.out.print("Enter Patient's Bill ID: ");
+        int billid = sc.nextInt();
+
+        System.out.print("Enter Insurance Claim payment amount: $");
+        int paidamount = sc.nextInt();
+
+        String qry = "SELECT claimamount FROM claim WHERE billid = ?";
+        PreparedStatement statement = con.prepareStatement(qry);
+
+        statement.setInt(1, billid);
+
+        ResultSet r = statement.executeQuery();
+        while(r.next())
+        {
+            int claimPaidAmount = r.getInt(1);
+
+            //Insurance_Payment_Calculator(amountdue, paidamount, billid);
+            //Claim_Payment_Calculator(amountdue, claimPaidAmount, billid);
+        }
+    }
+
+    void Claim_Payment_Calculator(int amountDue, int paidAmount, int billid) throws SQLException {
+
+        int amountUnpaid = 0;
+
+        amountUnpaid = amountDue - paidAmount;
+
+        //UPDATE BILL
+        String qry = "UPDATE BILL set amountdue = ? where billid = ?";
+        PreparedStatement statement = con.prepareStatement(qry);
+
+        statement.setInt(1, amountUnpaid);
+
+        statement.setInt(2, billid);
+        statement.executeUpdate();
+
+        //SELECT BILL REMAINING BALANCE
+        qry = "SELECT amountdue FROM BILL WHERE billid = ?";
+        statement = con.prepareStatement(qry);
+
+        statement.setInt(1, billid);
+
+        ResultSet r = statement.executeQuery();
+        while(r.next())
+        {
+            int newAmountDue = r.getInt(1);
+            System.out.print("Remaining Balance: $" + newAmountDue + "\n");
+        }
+    }
 }
 
 
