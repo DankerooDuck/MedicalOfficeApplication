@@ -16,15 +16,83 @@ public class Main {
 		// print header
 		for(int i = 0; i < metaData.getColumnCount(); i++) {
 			String columnName = metaData.getColumnName(i + 1);
-
-			System.out.print(columnName + " ");
+			int columnLen = 0;
+			switch(columnName) {
+				case "DATETIME":
+					columnLen = 20;
+					break;
+				case "DOB":
+					columnLen = 20;
+					break;
+				case "FNAME":
+					columnLen = 10;
+					break;
+				case "MINIT":
+					columnLen = 5;
+					break;
+				case "LNAME":
+					columnLen = 10;
+					break;
+				case "AGE":
+					columnLen = 4;
+					break;
+				case "INSURANCE_NAME":
+					columnLen = 14;
+					break;
+				case "INSURANCE_ID":
+					columnLen = 12;
+					break;
+				case "ITEMS":
+					columnLen = 5;
+					break;
+				default:
+					columnLen = 6;
+			} // End Switch
+			String padded = String.format("%"+columnLen+"s"+" ", columnName);
+			System.out.print(padded);
 		}
 
 		System.out.println();
 
 		while(set.next()) {
 			for(int i = 0; i < metaData.getColumnCount(); i++) {
-				System.out.print(set.getString(i + 1) + " ");
+				String temp = metaData.getColumnName(i + 1); // Get column name
+				int columnLen = 0;
+				String line = (set.getString(i + 1));
+				// Pad this string with spaces on the left to columnLen Length
+				switch(temp) {
+					case "DATETIME":
+						columnLen = 20;
+						break;
+					case "DOB":
+						columnLen = 20;
+						break;
+					case "FNAME":
+						columnLen = 10;
+						break;
+					case "MINIT":
+						columnLen = 5;
+						break;
+					case "LNAME":
+						columnLen = 10;
+						break;
+					case "AGE":
+						columnLen = 4;
+						break;
+					case "INSURANCE_NAME":
+						columnLen = 14;
+						break;
+					case "INSURANCE_ID":
+						columnLen = 12;
+						break;
+					case "ITEMS":
+						columnLen = 5;
+						break;
+					default:
+						columnLen = temp.length();
+				} // End Switch
+				String padded = String.format("%"+columnLen+"s"+" ", line);
+				System.out.print(padded);
 			}
 
 			System.out.println();
@@ -670,10 +738,20 @@ public class Main {
 				statement.setInt(4, sc.nextInt());*/
 
 				statement.execute();
+				System.out.println("New Bill Successfully Created.");
 
 			}
 			else if(userInput.equals("2"))
 			{
+				int billID = 0;
+				createUnpaidBillsReport();
+				blankLine();
+				createPaidBillsReports();
+				blankLine();
+				System.out.println("Enter ID of BILL you wish to EDIT: ");
+				billID = sc.nextInt();
+				blankLine();				
+				
 				System.out.println("What do you want to update:");
 				System.out.println("1. Bill Amount Due.");
 				userInput = sc.next();
@@ -683,13 +761,7 @@ public class Main {
 
 					System.out.println("Enter bill's new amount due.");
 					statement.setInt(1, sc.nextInt());
-
-					/*System.out.println("Enter bill's old amount due.");
-					statement.setInt(2, sc.nextInt());*/
-
-					System.out.println("Enter bill's ID.");
-					statement.setInt(2, sc.nextInt());
-
+					statement.setInt(2, billID);
 					statement.executeUpdate();
 				}
 			}
@@ -727,6 +799,7 @@ public class Main {
             System.out.println("3. Submit Claim");
             System.out.println("4. Back");
             userInput = sc.next();
+            blankLine();
             if (userInput.equals("1")) {
 
                 String qry = "INSERT INTO CLAIM (claimid, insuranceid, patients_patientid, claimamount, billid) VALUES (?,?,?,?,?)";
@@ -762,22 +835,22 @@ public class Main {
         }
     }
 
-	//input is a hardcoded integer for switch below
-	//each case calls verifyUserInput()
-	// 1 = PATIENT fname
-	// 2 = PATIENT minit
-	// 3 = PATIENT lname
-	// 4 = PATIENT NEW fname
-	// 5 = PATIENT NEW minit
-	// 6 = PATIENT NEW lname
-	// 7 = DOCTOR fname
-	// 8 = DOCTOR minit
-	// 9 = DOCTOR lname
-	// 10 = DOCTOR NEW fname
-	// 11 = DOCTOR NEW minit
-	// 12 = DOCTOR NEW lname
-	//returns fname, minit, etc.
 	public String userInput(int sw) {
+		//input is a hardcoded integer for switch below
+		//each case calls verifyUserInput()
+		// 1 = PATIENT fname
+		// 2 = PATIENT minit
+		// 3 = PATIENT lname
+		// 4 = PATIENT NEW fname
+		// 5 = PATIENT NEW minit
+		// 6 = PATIENT NEW lname
+		// 7 = DOCTOR fname
+		// 8 = DOCTOR minit
+		// 9 = DOCTOR lname
+		// 10 = DOCTOR NEW fname
+		// 11 = DOCTOR NEW minit
+		// 12 = DOCTOR NEW lname
+		//returns fname, minit, etc.
 		Scanner sc = new Scanner(System.in);
 		Boolean flag = false;
 		switch(sw) {
@@ -881,13 +954,14 @@ public class Main {
 			return null;
 	}
 	
-	//input is integer for the switch below
-	// 1 = Enter Date of Birth
-	// 2 = Enter New Date of Birth
-	// 3 = Enter Date
-	// 3 = Enter New Date
-	//returns String hopefully formatted as YYYY-MM-DD
+
 	public String updateDate(int sw) {
+		//input is integer for the switch below
+		// 1 = Enter Date of Birth
+		// 2 = Enter New Date of Birth
+		// 3 = Enter Date
+		// 3 = Enter New Date
+		//returns String hopefully formatted as YYYY-MM-DD
 		  Scanner sc = new Scanner(System.in);
 		  String tempDate = null;
 		  switch (sw) {
