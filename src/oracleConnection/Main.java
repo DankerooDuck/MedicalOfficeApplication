@@ -823,8 +823,8 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         while (true) {
             System.out.println("\nClaim Menu:");
-            System.out.println("1. Create new Claim");
-            System.out.println("2. Update existing Claim");
+            System.out.println("1. Create New Claim");
+            System.out.println("2. Update Existing Claim");
             System.out.println("3. Submit Claim");
             System.out.println("4. Back");
             userInput = sc.next();
@@ -872,15 +872,23 @@ public class Main {
                 statement.setInt(3, sc.nextInt());
                 
                 statement.execute();
+                System.out.println("New Claim Successfully Created");
             }
             if(userInput.equals("2"))
             {
+            	viewClaims();
+            	blankLine();
+            	System.out.println("Enter the ID of the CLAIM you wish to EDIT:");
+            	int claimID = sc.nextInt();
+            	
+            	//query to edit claims, probably call userInput
+            	
             	//UPDATE EXISTING CLAIM
             }
             if(userInput.equals("3"))
             {
             	//SUBMIT CLAIM
-                Claim_Payment();
+                Claim_Payment(); //pays amount to bill as determined in claim
             }
             if(userInput.equals("4"))
             {
@@ -1174,6 +1182,24 @@ public class Main {
 		
 	}
 	
+	public void viewClaims() throws SQLException {
+		Scanner sc = new Scanner(System.in);
+		int patientID;
+		String qry = "(SELECT claim.claimid, patient.fname, patient.minit, patient.lname, patient.insurance_name, patient.insurance_id, bill.billid, bill.amountdue, bill.items, appointment.datetime, claim.claimamount"
+				+ " FROM claim"
+				+ " INNER JOIN patient ON claim.patients_patientid=patient.patient"
+				+ " INNER JOIN bill ON claim.billid=bill.billid"		
+				+ " INNER JOIN appointment ON bill.visit_appointments_apptid=appointment.apptid)";
+		PreparedStatement statement = con.prepareStatement(qry); //print normally
+		
+		ResultSet result = statement.executeQuery();
+		if(result != null) {
+			printResults(result);
+		} else {
+			System.out.println("Failed to get results for this report.");
+		}
+	}
+	
 	void blankLine() {
 		System.out.println("");
 	}
@@ -1240,30 +1266,59 @@ public class Main {
 
     // FIXME: trying to make claim amount be paid by insurance
     void Claim_Payment() throws SQLException {
+    	//prints existing claims
+    	//asks user for which claim to submit (pay)
+    	//pay bill amount = claim amountdue
+    	//call function/query to pay
+    	//print bill table where billid = claim.billid
+    	//make amount due on claim $0 because the amount was just paid
+    	viewClaims();
+    	blankLine();
+    	
+        Scanner sc = new Scanner(System.in); 
+		String qry = "(SELECT claimamount, claim.billid, bill.amountdue FROM CLAIM INNER JOIN bill ON claim.billid=bill.billid WHERE claimamount > 0 and claimid = ?)"; //PULL CLAIM.CLAIMAMOUNT AND CLAIM.BILLID
+		PreparedStatement statement = con.prepareStatement(qry);
+		
 
-        Scanner sc = new Scanner(System.in);
-        System.out.println();
-        createUnpaidBillsReport();
-
-        System.out.print("Enter Patient's Bill ID: ");
-        int billid = sc.nextInt();
-
-        System.out.print("Enter Insurance Claim payment amount: $");
-        int paidamount = sc.nextInt();
-
-        String qry = "SELECT claimamount FROM claim WHERE billid = ?";
-        PreparedStatement statement = con.prepareStatement(qry);
-
-        statement.setInt(1, billid);
-
+        System.out.println("Enter ClaimID for which you wish to SUBMIT:");
+		int claimID = sc.nextInt();
+		statement.setInt(1, claimID);
+		blankLine();
+		
         ResultSet r = statement.executeQuery();
-        while(r.next())
-        {
-            int claimPaidAmount = r.getInt(1);
-
-            //Insurance_Payment_Calculator(amountdue, paidamount, billid);
-            //Claim_Payment_Calculator(amountdue, claimPaidAmount, billid);
+        while(r.next()) {
+        	int paidamount = r.getInt(1); //amount to pay
+        	int billid = r.getInt(2); //bill id
+        	int amountdue = r.getInt(3); //amount due on bill
+        	
+        	Payment_Calculator(amountdue, paidamount, billid);
+        	
+//        	String qry2 = "UPDATE claimamount = 0 WHERE claimid = ?";
+//        	PreparedStatement statement2 = con.prepareStatement(qry2);
         }
+        
+		
+		
+
+//        System.out.print("Enter Patient's Bill ID: ");
+//        int billid = sc.nextInt();
+//
+//        System.out.print("Enter Insurance Claim payment amount: $");
+//        int paidamount = sc.nextInt();
+//
+//        String qry = "SELECT claimamount FROM claim WHERE billid = ?";
+//        PreparedStatement statement = con.prepareStatement(qry);
+//
+//        statement.setInt(1, billid);
+//
+//        ResultSet r = statement.executeQuery();
+//        while(r.next())
+//        {
+//            int claimPaidAmount = r.getInt(1);
+//
+//            //Insurance_Payment_Calculator(amountdue, paidamount, billid);
+//            //Claim_Payment_Calculator(amountdue, claimPaidAmount, billid);
+//        }
     }
 
     
