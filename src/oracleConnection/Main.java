@@ -663,7 +663,8 @@ public class Main {
 					}//end while
 					statement.setInt(1, appointmentID);
 					statement.executeUpdate();
-					System.out.println("Appointment successfully cancelled.\n");
+
+					viewAppointments();
 				}
 				if (userInput.equals("5")) {
 					break;
@@ -892,6 +893,7 @@ public class Main {
             }
             if(userInput.equals("4"))
             {
+				break;
                 //Go Back to Main menu
             }
         }
@@ -1033,7 +1035,6 @@ public class Main {
 			}
 			return null;
 	}
-	
 
 	public String updateDate(int sw) {
 		//input is integer for the switch below
@@ -1278,7 +1279,6 @@ public class Main {
         Scanner sc = new Scanner(System.in); 
 		String qry = "(SELECT claimamount, claim.billid, bill.amountdue FROM CLAIM INNER JOIN bill ON claim.billid=bill.billid WHERE claimamount > 0 and claimid = ?)"; //PULL CLAIM.CLAIMAMOUNT AND CLAIM.BILLID
 		PreparedStatement statement = con.prepareStatement(qry);
-		
 
         System.out.println("Enter ClaimID for which you wish to SUBMIT:");
 		int claimID = sc.nextInt();
@@ -1290,9 +1290,35 @@ public class Main {
         	int paidamount = r.getInt(1); //amount to pay
         	int billid = r.getInt(2); //bill id
         	int amountdue = r.getInt(3); //amount due on bill
-        	
-        	Payment_Calculator(amountdue, paidamount, billid);
-        	
+
+			qry = "SELECT settled FROM CLAIM WHERE billid = ?";
+			statement = con.prepareStatement(qry);
+
+			statement.setInt(1, billid);
+
+			r = statement.executeQuery();
+			while(r.next()) {
+				String settled = r.getString(1);
+
+				// attribute "settled" in the claims table
+				// if "No" = process the claim
+				if (settled.equals("No"))
+				{
+					Payment_Calculator(amountdue, paidamount, billid);
+
+					// UPDATE SETTLED ATTRIBUTE TO "YES"
+					String nowSettled = "Yes";
+					qry = "UPDATE CLAIM set settled = ? where claimid = ?";
+					statement = con.prepareStatement(qry);
+					statement.setString(1, nowSettled);
+					statement.setInt(2, claimID);
+					statement.executeUpdate();
+				}
+				else
+				{
+					System.out.println("Claim has been settled.");
+				}
+			}
 //        	String qry2 = "UPDATE claimamount = 0 WHERE claimid = ?";
 //        	PreparedStatement statement2 = con.prepareStatement(qry2);
         }
