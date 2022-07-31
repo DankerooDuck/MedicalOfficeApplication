@@ -328,7 +328,7 @@ public class Main {
 				System.out.println("3. Back");
 				userInput = sc.next();
 				blankLine();
-
+				
 				if (userInput.equals("1")) {
 
 					String qry = "INSERT INTO PATIENT (fname, minit, lname, dob, insurance_name, insurance_id) VALUES (?,?,?,?,?,?)";
@@ -350,13 +350,13 @@ public class Main {
 					//PATIENT DATE OF BIRTH
 					String tempDate = updateDate(1);
 					statement.setDate(4, Date.valueOf(tempDate)); //Date format Example: YYYY-MM-DD
-
+					
 					System.out.println("Does the patient have insurance?");
 					System.out.println("1. Yes");
 					System.out.println("2. No");
 					userInput = sc.next();
 					blankLine();
-
+					
 					String insuranceName = "";
 					int insuranceID = 0;
 					switch(userInput) {
@@ -374,7 +374,7 @@ public class Main {
 							statement.setInt(6, insuranceID);
 							break;
 					}
-
+					
 					//CREATE NEW PATIENT COMPLETE
 					statement.execute();
 					System.out.println("Patient Successfully Created.\n");
@@ -383,7 +383,7 @@ public class Main {
 					//Print Patient List
 					viewPatients();
 					blankLine();
-
+					
 					System.out.println("Enter ID of PATIENT you wish to EDIT:");
 					int patientID = sc.nextInt();
 					blankLine();
@@ -432,14 +432,14 @@ public class Main {
 							String tempDate = updateDate(2);
 							statement.setDate(1, Date.valueOf(tempDate));
 							statement.setInt(2, patientID);
-
+							
 							statement.executeUpdate();
 							System.out.println("Date of Birth Updated.");
 						} else if (userInput.equals("5")) {
 							break;
 							//back choice
 						}
-
+						
 					}
 				} else if (userInput.equals("3")) {
 					break;
@@ -469,7 +469,7 @@ public class Main {
 				System.out.println("3. Back");
 				userInput = sc.next();
 				blankLine();
-
+				
 				if (userInput.equals("1")) {
 
 					String qry = "INSERT INTO DOCTOR (fname, lname, minit) VALUES (?,?,?)";
@@ -493,11 +493,11 @@ public class Main {
 					System.out.println("New Doctor Successfully Created.\n");;
 
 				} else if (userInput.equals("2")) {
-
+					
 					blankLine();
 					viewDoctors();
 					blankLine();
-
+					
 					System.out.println("Enter ID of DOCTOR you wish to EDIT:");
 					int doctorID = sc.nextInt();
 					blankLine();
@@ -535,7 +535,7 @@ public class Main {
 							//DOCTOR NEW LAST NAME
 							String qry = "UPDATE DOCTOR set lname = ? where doctorid = ?";
 							PreparedStatement statement = con.prepareStatement(qry);
-
+							
 							String lname = userInput(12);
 							statement.setString(1, lname);
 							statement.setInt(2, doctorID);
@@ -545,7 +545,7 @@ public class Main {
 							break;
 							//skip logic and return to previous menu
 						}
-
+						
 					}
 				} else if (userInput.equals("3")) {
 					break;
@@ -584,13 +584,13 @@ public class Main {
 
 					String tempDate = updateDate(3);
 					statement.setDate(1, Date.valueOf(tempDate)); //Date format Example: YYYY-MM-DD
-
+					
 					viewPatients();
 					blankLine();
 					System.out.println("Enter patientID:");
 					statement.setInt(2, sc.nextInt());
 					blankLine();
-
+					
 					viewDoctors();
 					blankLine();
 					System.out.println("Enter doctorID:");
@@ -608,7 +608,7 @@ public class Main {
 					System.out.println("Enter ID of APPOINTMENT you wish to EDIT: ");
 					apptID = sc.nextInt();
 					blankLine();
-
+					
 					System.out.println("What do you want to update:");
 					System.out.println("1. Appointment Date/Time (YYYY-MM-DD).");
 					System.out.println("2. Back");
@@ -619,7 +619,7 @@ public class Main {
 						PreparedStatement statement = con.prepareStatement(qry);
 						String apptDate = updateDate(4);
 						Date newDate = Date.valueOf(apptDate);
-
+						
 						statement.setDate(1, newDate);
 						statement.setInt(2, apptID);
 						statement.executeUpdate();
@@ -776,8 +776,8 @@ public class Main {
 				blankLine();
 				System.out.println("Enter ID of BILL you wish to EDIT: ");
 				billID = sc.nextInt();
-				blankLine();
-
+				blankLine();				
+				
 				System.out.println("What do you want to update:");
 				System.out.println("1. Bill Amount Due.");
 				userInput = sc.next();
@@ -797,7 +797,7 @@ public class Main {
 			}
 			if(userInput.equals("4"))
 			{
-				Create_Update_Submit_Claim();
+                Create_Update_Submit_Claim();
 			}
 			if(userInput.equals("5"))
 			{
@@ -818,86 +818,143 @@ public class Main {
 		}
 	}
 
-	// fixme: What are the necessary attributes for the claim table?
-	void Create_Update_Submit_Claim() throws SQLException {
-		String userInput = "";
-		Scanner sc = new Scanner(System.in);
-		while (true) {
-			System.out.println("\nClaim Menu:");
-			System.out.println("1. Create New Claim");
-			System.out.println("2. Update Existing Claim");
-			System.out.println("3. Submit Claim");
-			System.out.println("4. Back");
-			userInput = sc.next();
-			blankLine();
-			if (userInput.equals("1")) {
-				//CREATE NEW CLAIM
-				String qry = "INSERT INTO CLAIM (insuranceid, patients_patientid, claimamount, billid) VALUES (?,?,?,?)"; //claimid generated by DBMS
-				PreparedStatement statement = con.prepareStatement(qry);
-				statement = con.prepareStatement(qry);
+    // fixme: What are the necessary attributes for the claim table?
+    void Create_Update_Submit_Claim() throws SQLException {
+        String userInput = "";
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            System.out.println("\nClaim Menu:");
+            System.out.println("1. Create New Claim");
+            System.out.println("2. Update Existing Claim");
+            System.out.println("3. Submit Existing Claim");
+            System.out.println("4. Back");
+            userInput = sc.next();
+            blankLine();
+            if (userInput.equals("1")) {
+            	//CREATE NEW CLAIM
+                String qry = "INSERT INTO CLAIM (insuranceid, patients_patientid, claimamount, billid, settled) VALUES (?,?,?,?,?)"; //claimid generated by DBMS
+                PreparedStatement statement = con.prepareStatement(qry);
+                statement = con.prepareStatement(qry);
 
-				viewPatients();
+                viewPatients();
+                
+                //ENTER PATIENT ID
+                
+                //get patient id from user
+                int patientID = userInputInts(1);
+                statement.setInt(2, patientID);
+               
+                //get patient insurance id
+                int patientInsuranceID = userInputInts(3);
+                statement.setInt(1, patientInsuranceID);
+                blankLine();
+                              
+                statement.setString(5, "No"); //set "SETTLED" in DB to "No" by default
+                
+                //PRINT BILLS FOR PATIENTID
+        		String qry2 = "SELECT bill.billid, patient.fname, patient.minit, patient.lname, bill.amountdue FROM bill"
+        				+ " INNER JOIN appointment ON bill.visit_appointments_apptid=appointment.apptid"
+        				+ " INNER JOIN patient ON appointment.patients_patientid=patient.patient"
+        				+ " WHERE patient.patient = ?";
+        		
+        		PreparedStatement statement2 = con.prepareStatement(qry2);
+        		statement2.setInt(1, patientID);
+        		
+        		statement2.execute();
+        		
+        		ResultSet result2 = statement2.executeQuery();
+        		if(result2 != null) {
+        			printResults(result2);
+        		} else {
+        			System.out.println("Failed to get results for this report.");
+        		} 
+        		//END PRINT BILL SCREEN
+        		
+        		//get bill id from user
+                int billID = userInputInts(7);
+                statement.setInt(4, billID);
 
-				//ENTER PATIENT ID
-				int patientID = 0;
-				System.out.print("Enter Patient's ID: ");
-				patientID = sc.nextInt();
-				statement.setInt(2, patientID);
-
-				System.out.print("Enter Patient's Insurance ID: ");
-				statement.setInt(1, sc.nextInt());
-				blankLine();
-
-				//PRINT BILL SCREEN
-				String qry2 = "SELECT bill.billid, patient.fname, patient.minit, patient.lname, bill.amountdue FROM bill"
-						+ " INNER JOIN appointment ON bill.visit_appointments_apptid=appointment.apptid"
-						+ " INNER JOIN patient ON appointment.patients_patientid=patient.patient"
-						+ " WHERE patient.patient = ?";
-
-				PreparedStatement statement2 = con.prepareStatement(qry2);
-				statement2.setInt(1, patientID);
-
-				statement2.execute();
-
-				ResultSet result2 = statement2.executeQuery();
-				if(result2 != null) {
-					printResults(result2);
-				} else {
-					System.out.println("Failed to get results for this report.");
-				}
-
-				System.out.print("Enter Bill ID: ");
-				statement.setInt(4, sc.nextInt());
-
-				System.out.print("Enter Claim Amount $: ");
-				statement.setInt(3, sc.nextInt());
-
-				statement.execute();
-				System.out.println("New Claim Successfully Created");
-			}
-			if(userInput.equals("2"))
-			{
-				viewClaims();
-				blankLine();
-				System.out.println("Enter the ID of the CLAIM you wish to EDIT:");
-				int claimID = sc.nextInt();
-
-				//query to edit claims, probably call userInput
-
-				//UPDATE EXISTING CLAIM
-			}
-			if(userInput.equals("3"))
-			{
-				//SUBMIT CLAIM
-				Claim_Payment(); //pays amount to bill as determined in claim
-			}
-			if(userInput.equals("4"))
-			{
+                //get claim amount from user
+                int claimID = userInputInts(6);
+                statement.setInt(3, claimID);
+                
+                statement.execute();
+                blankLine();
+                System.out.println("New Claim Successfully Created");
+            }
+            if(userInput.equals("2"))
+            {
+            	System.out.println("Update Claim Menu:");
+            	System.out.println("1. Update Insurance ID:");
+            	System.out.println("2. Update Patient ID:");
+            	System.out.println("3. Update Claim Amount:");
+            	System.out.println("4. Update Bill ID");
+            	System.out.println("5. Back");
+            	int menuInt = sc.nextInt(); //user menu input used for switch below
+            	blankLine();
+            	
+            	viewClaims();
+            	blankLine();
+            	
+            	System.out.println("Enter the ID of the CLAIM you wish to EDIT:");
+            	int claimID = sc.nextInt();
+            	blankLine();
+            	
+            	if (menuInt == 1) { //UPDATE INSURANCE ID
+            		String qry = "UPDATE CLAIM SET insuranceid=? where claimid=?";
+            		PreparedStatement statementInsurance = con.prepareStatement(qry);
+            		int insuranceID = userInputInts(4);
+            		statementInsurance.setInt(1, insuranceID);
+            		statementInsurance.setInt(2, claimID);
+        			statementInsurance.executeUpdate();
+                    System.out.println("Successfully updated Insurance ID.");
+            	}
+            	if (menuInt == 2) { //UPDATE PATIENT ID
+            		viewPatients(); //print patients
+            		String qry = "UPDATE CLAIM set patients_patientid = ? WHERE claimid = ?";
+            		PreparedStatement statementPatient = con.prepareStatement(qry);
+        			int patientID = userInputInts(2);
+        			statementPatient.setInt(1, patientID);
+        			statementPatient.setInt(2, claimID);
+        			statementPatient.executeUpdate();
+                    System.out.println("Successfully updated Patient ID.");
+            	}
+            	if (menuInt == 3) { //UPDATE CLAIM AMOUNT
+            		String qry = "UPDATE CLAIM set claimamount = ? WHERE claimid = ?";
+        			PreparedStatement statementClaimAmnt = con.prepareStatement(qry);
+        			int claimAmount = userInputInts(6);
+        			statementClaimAmnt.setInt(1, claimAmount);
+        			statementClaimAmnt.setInt(2, claimID);
+        			statementClaimAmnt.executeUpdate();
+                    System.out.println("Successfully updated Claim Amount.");
+            	}
+            	if (menuInt == 4) { //UPDATE BILL ID
+        			String qry = "UPDATE CLAIM set billid = ? WHERE claimid = ?";
+        			PreparedStatement statementBill = con.prepareStatement(qry);
+        			int billID = userInputInts(8);
+        			statementBill.setInt(1, billID);
+        			statementBill.setInt(2, claimID);
+        			statementBill.executeUpdate();
+                    System.out.println("Successfully updated Bill ID.");
+            	}
+            	else if (menuInt == 5){
+            		//return to prev menu
+            	}
+            	
+            }
+            if(userInput.equals("3"))
+            {
+            	//SUBMIT CLAIM
+                Claim_Payment(); //pays amount to bill as determined in claim
+            }
+            if(userInput.equals("4"))
+            {
 				break;
-				//Go Back to Main menu
-			}
-		}
-	}
+                //Go Back to Main menu
+            }
+        }
+    }
+
 
 	public String userInput(int sw) {
 		//input is a hardcoded integer for switch below
@@ -922,185 +979,235 @@ public class Main {
 		switch(sw) {
 			case 1: //patient fname
 				String pfname = "";
-				while (flag == false) {
-					System.out.println("Enter Patient's First Name:"); //prompt user for input
-					pfname = sc.next(); //store input
-					flag = verifyUserInput(pfname); //verify input
-				}//end while
-				return pfname; //return string
-			case 2: //patient minit
-				String pminit = "";
-				while (flag == false) {
-					System.out.println("Enter Patient's Middle Initial:"); //prompt user for input
-					pminit = sc.next(); //store input
-					flag = verifyUserInput(pminit); //verify input
-				}//end while
-				return pminit; //return string
-			case 3: //patient lname
-				String plname = "";
-				while (flag == false) {
-					System.out.println("Enter Patient's Last Name:"); //prompt user for input
-					plname = sc.next(); //store input
-					flag = verifyUserInput(plname); //verify input
-				}//end while
-				return plname; //return string
-			case 4: //patient NEW fname
-				String pfnameNew = "";
-				while (flag == false) {
-					System.out.println("Enter Patient's New First Name:"); //prompt user for input
-					pfnameNew = sc.next(); //store input
-					flag = verifyUserInput(pfnameNew); //verify input
-				}
-				return pfnameNew; //return string
-			case 5: //patient NEW minit
-				String pminitNew = "";
-				while (flag == false) {
-					System.out.println("Enter Patient's New Middle Initial:"); //prompt user for input
-					pminitNew = sc.next(); //store input
-					flag = verifyUserInput(pminitNew); //verify input
-				}
-				return pminitNew; //return string
-			case 6: //patient NEW lname
-				String plnameNew = "";
-				while (flag == false) {
-					System.out.println("Enter Patient's New Last Name:"); //prompt user for input
-					plnameNew = sc.next(); //store input
-					flag = verifyUserInput(plnameNew); //verify input
-				}
-				return plnameNew; //return string
-			case 7: //doctor fname
-				String dfname = "";
-				while (flag == false) {
-					System.out.println("Enter Doctors's First Name:"); //prompt user for input
-					dfname = sc.next(); //store input
-					flag = verifyUserInput(dfname); //verify input
-				}
-				return dfname; //return string
-			case 8: //doctor minit
-				String dminit = "";
-				while (flag == false) {
-					System.out.println("Enter Doctor's Middle Initial:"); //prompt user for input
-					dminit = sc.next(); //store input
-					flag = verifyUserInput(dminit); //verify input
-				}
-				return dminit; //return string
-			case 9: //doctor lname
-				String dlname = "";
-				while (flag == false) {
-					System.out.println("Enter Doctors's Last Name:"); //prompt user for input
-					dlname = sc.next(); //store input
-					flag = verifyUserInput(dlname); //verify input
-				}
-				return dlname; //return string
-			case 10: //doctor fname
-				String dfnameNew = "";
-				while (flag == false) {
-					System.out.println("Enter Doctors's New First Name:"); //prompt user for input
-					dfnameNew = sc.next(); //store input
-					flag = verifyUserInput(dfnameNew); //verify input
-				}
-				return dfnameNew; //return string
-			case 11: //doctor minit
-				String dminitNew = "";
-				while (flag == false) {
-					System.out.println("Enter Doctor's New Middle Initial:"); //prompt user for input
-					dminitNew = sc.next(); //store input
-					flag = verifyUserInput(dminitNew); //verify input
-				}
-				return dminitNew; //return string
-			case 12: //doctor lname
-				String dlnameNew = "";
-				while (flag == false) {
-					System.out.println("Enter Doctors's New Last Name:"); //prompt user for input
-					dlnameNew = sc.next(); //store input
-					flag = verifyUserInput(dlnameNew); //verify input
-				}
-				return dlnameNew; //return string
-			case 13: //insurance name
-				String insuranceName = "";
-				while (flag == false) {
-					System.out.println("Enter Insurance Name: (No Spaces Allowed/Underscores Only)"); //prompt user for input
-					insuranceName = sc.next(); //store input
-					flag = verifyUserInput(insuranceName); //verify input
-				}
-				return insuranceName; //return string
-			case 14: //NEW insurance name
-				String insuranceNameNew = "";
-				while (flag == false) {
-					System.out.println("Enter New Insurance Name: (No Spaces Allowed/Underscores Only)"); //prompt user for input
-					insuranceNameNew = sc.next(); //store input
-					flag = verifyUserInput(insuranceNameNew); //verify input
-				}
-				return insuranceNameNew; //return string
-		}
-		return null;
+		        while (flag == false) {
+		        	System.out.println("Enter Patient's First Name:"); //prompt user for input
+		            pfname = sc.next(); //store input
+		            flag = verifyUserInput(pfname); //verify input
+		        }//end while
+		        return pfname; //return string
+		    case 2: //patient minit
+		        String pminit = "";
+		        while (flag == false) {
+		        	System.out.println("Enter Patient's Middle Initial:"); //prompt user for input
+		            pminit = sc.next(); //store input
+		            flag = verifyUserInput(pminit); //verify input
+		        }//end while
+		        return pminit; //return string
+		    case 3: //patient lname
+		        String plname = "";
+		        while (flag == false) {
+		        	System.out.println("Enter Patient's Last Name:"); //prompt user for input
+		            plname = sc.next(); //store input
+		            flag = verifyUserInput(plname); //verify input
+		        }//end while
+		        return plname; //return string
+		    case 4: //patient NEW fname
+		        String pfnameNew = "";
+		        while (flag == false) {
+		        	System.out.println("Enter Patient's New First Name:"); //prompt user for input
+		        	pfnameNew = sc.next(); //store input
+		            flag = verifyUserInput(pfnameNew); //verify input
+		        }
+		        return pfnameNew; //return string
+		    case 5: //patient NEW minit
+		        String pminitNew = "";
+		        while (flag == false) {
+		            System.out.println("Enter Patient's New Middle Initial:"); //prompt user for input
+		            pminitNew = sc.next(); //store input
+		            flag = verifyUserInput(pminitNew); //verify input
+		        }
+		        return pminitNew; //return string
+		    case 6: //patient NEW lname
+		        String plnameNew = "";
+		        while (flag == false) {
+		             System.out.println("Enter Patient's New Last Name:"); //prompt user for input
+		             plnameNew = sc.next(); //store input
+		             flag = verifyUserInput(plnameNew); //verify input
+		        }
+		        return plnameNew; //return string
+		    case 7: //doctor fname
+		        String dfname = "";
+		        while (flag == false) {
+		             System.out.println("Enter Doctors's First Name:"); //prompt user for input
+		             dfname = sc.next(); //store input
+		             flag = verifyUserInput(dfname); //verify input
+		        }
+		        return dfname; //return string
+		    case 8: //doctor minit
+		        String dminit = "";
+		        while (flag == false) {
+		             System.out.println("Enter Doctor's Middle Initial:"); //prompt user for input
+		             dminit = sc.next(); //store input
+		             flag = verifyUserInput(dminit); //verify input
+		        }
+		        return dminit; //return string
+		    case 9: //doctor lname
+		        String dlname = "";
+		        while (flag == false) {
+		             System.out.println("Enter Doctors's Last Name:"); //prompt user for input
+		             dlname = sc.next(); //store input
+		             flag = verifyUserInput(dlname); //verify input
+		        }
+		        return dlname; //return string
+		    case 10: //doctor fname
+		        String dfnameNew = "";
+		        while (flag == false) {
+		             System.out.println("Enter Doctors's New First Name:"); //prompt user for input
+		             dfnameNew = sc.next(); //store input
+		             flag = verifyUserInput(dfnameNew); //verify input
+		        }
+		        return dfnameNew; //return string
+		    case 11: //doctor minit
+		        String dminitNew = "";
+		        while (flag == false) {
+		              System.out.println("Enter Doctor's New Middle Initial:"); //prompt user for input
+		              dminitNew = sc.next(); //store input
+		              flag = verifyUserInput(dminitNew); //verify input
+		        }
+		        return dminitNew; //return string
+		    case 12: //doctor lname
+		        String dlnameNew = "";
+		        while (flag == false) {
+		              System.out.println("Enter Doctors's New Last Name:"); //prompt user for input
+		              dlnameNew = sc.next(); //store input
+		              flag = verifyUserInput(dlnameNew); //verify input
+		        }
+		        return dlnameNew; //return string
+		    case 13: //insurance name
+		    	String insuranceName = "";
+		        while (flag == false) {
+		              System.out.println("Enter Insurance Name: (No Spaces Allowed/Underscores Only)"); //prompt user for input
+		              insuranceName = sc.next(); //store input
+		              flag = verifyUserInput(insuranceName); //verify input
+		        }
+		        return insuranceName; //return string
+		    case 14: //NEW insurance name
+		    	String insuranceNameNew = "";
+		        while (flag == false) {
+		              System.out.println("Enter New Insurance Name: (No Spaces Allowed/Underscores Only)"); //prompt user for input
+		              insuranceNameNew = sc.next(); //store input
+		              flag = verifyUserInput(insuranceNameNew); //verify input
+		        }
+		        return insuranceNameNew; //return string
+			}
+			return null;
 	}
-
-	public String updateDate(int sw) {
-		//input is integer for the switch below
-		// 1 = Enter Date of Birth
-		// 2 = Enter New Date of Birth
-		// 3 = Enter Date
-		// 3 = Enter New Date
-		//returns String hopefully formatted as YYYY-MM-DD
+	
+	public Boolean verifyUserInputInt(int input) {
+		//asks user to verify their input for integers
+		//if 1 -> return true
+		//if 2 -> return false
 		Scanner sc = new Scanner(System.in);
-		String tempDate = null;
-		switch (sw) {
-			case 1:
-				Boolean flag = false;
-				while (flag == false) {
-					System.out.println("Enter Date of Birth: (YYYY-MM-DD)");
-					tempDate = (sc.next());
-					flag = verifyUserInput(tempDate);
-				} //end while
-				break;
-			case 2:
-				flag = false;
-				while (flag == false) {
-					System.out.println("Enter New Date of Birth: (YYYY-MM-DD)");
-					tempDate = (sc.next());
-					flag = verifyUserInput(tempDate);
-				} //end while
-				break;
-			case 3:
-				flag = false;
-				while (flag == false) {
-					System.out.println("Enter Appointment Date: (YYYY-MM-DD)");
-					tempDate = (sc.next());
-					flag = verifyUserInput(tempDate);
-				} //end while
-				break;
-			case 4:
-				flag = false;
-				while (flag == false) {
-					System.out.println("Enter New Appointment Date: (YYYY-MM-DD)");
-					tempDate = (sc.next());
-					flag = verifyUserInput(tempDate);
-				} //end while
-				break;
-		} //end switch
+		int userInput;
 		blankLine();
-		return tempDate;
-	} //end updateDateTime
-
-	public void viewDoctors() throws SQLException {
-		String qry = "SELECT doctor.doctorid, doctor.fname, doctor.minit, doctor.lname FROM DOCTOR";
-
-		PreparedStatement statement = con.prepareStatement(qry);
-
-		ResultSet result = statement.executeQuery();
-		if (result != null) {
-			printResults(result);
+		System.out.println("You entered: " + input + ". Is this correct?");
+		System.out.println("1. Correct");
+		System.out.println("2. Incorrect");
+		userInput = sc.nextInt(); //user input validation, correct or incorrect
+		blankLine();
+		if (userInput == 1) {
+			return true; //exit loop
+		} else if (userInput == 2) {
+			return false; //loop
 		} else {
-			System.out.println("Failed to get results for this report.");
+			return null;
 		}
-	} //end viewDoctors
-
+	}
+	
+	public int userInputInts(int sw) {
+		//input is a hardcoded integer for switch below
+		//each case calls verifyUserInput()
+		// 1 = patientID
+		// 2 = New patientID
+		// 3 = insuranceID
+		// 4 = newInsuranceID
+		// 5 = claimAmount
+		// 6 = newClaimAmount
+		// 7 = billID
+		// 8 = newBillID
+		// 9 = 
+		// 10 = 
+		// 11 = 
+		// 12 = 
+		// 13 = 
+		// 14 = 
+		//returns integer value of attributes above
+		Scanner sc = new Scanner(System.in);
+		Boolean flag = false;
+		switch(sw) {
+			case 1: //patientID
+				int patientID = 0;
+				while (flag == false) {
+					System.out.println("Enter Patient ID:");
+					patientID = sc.nextInt();
+					flag = verifyUserInputInt(patientID);
+				}//end while
+				return patientID;
+			case 2: //patientID
+				int patientIDNew = 0;
+				while (flag == false) {
+					System.out.println("Enter New Patient ID:");
+					patientIDNew = sc.nextInt();
+					flag = verifyUserInputInt(patientIDNew);
+				}//end while
+				return patientIDNew;	
+			case 3: //insuranceID
+				int insuranceID = 0;
+				while (flag == false) {
+					System.out.println("Enter Insurance ID:");
+					insuranceID = sc.nextInt();
+					flag = verifyUserInputInt(insuranceID);
+				}//end while
+				return insuranceID;
+			case 4: //insuranceID
+				int insuranceIDNew = 0;
+				while (flag == false) {
+					System.out.println("Enter New Insurance ID:");
+					insuranceIDNew = sc.nextInt();
+					flag = verifyUserInputInt(insuranceIDNew);
+				}//end while
+				return insuranceIDNew;
+			case 5: //claimAmount
+				int claimAmount = 0;
+				while (flag == false) {
+					System.out.println("Enter Claim Amount $: ");
+					claimAmount = sc.nextInt();
+					flag = verifyUserInputInt(claimAmount);
+				}
+				return claimAmount;
+			case 6: //claimAmount
+				int claimAmountNew = 0;
+				while (flag == false) {
+					System.out.println("Enter New Claim Amount $: ");
+					claimAmountNew = sc.nextInt();
+					flag = verifyUserInputInt(claimAmountNew);
+				}
+				return claimAmountNew;
+			case 7: //billID
+				int billID = 0;
+				while (flag == false) {
+					System.out.println("Enter Bill ID: ");
+					billID = sc.nextInt();
+					flag = verifyUserInputInt(billID);
+				}
+				return billID;
+			case 8: //billID
+				int billIDNew = 0;
+				while (flag == false) {
+					System.out.println("Enter New Bill ID: ");
+					billIDNew = sc.nextInt();
+					flag = verifyUserInputInt(billIDNew);
+				}
+				return billIDNew;
+			}
+			return 0;
+	}
+	
 	public void viewPatients() throws SQLException {
-		String qry = "SELECT patient.patient, patient.fname, patient.minit, patient.lname, patient.dob, patient.insurance_name, patient.insurance_id FROM PATIENT";
-
+		String qry = "SELECT patient.patient, patient.fname, patient.minit, patient.lname, patient.dob, patient.insurance_name, claim.insuranceid FROM PATIENT INNER JOIN claim ON patient.patient=claim.patients_patientid";
+		
 		PreparedStatement statement = con.prepareStatement(qry);
-
+		
 		ResultSet result = statement.executeQuery();
 		if(result != null) {
 			printResults(result);
@@ -1108,14 +1215,14 @@ public class Main {
 			System.out.println("Failed to get results for this report.");
 		}
 	}//end viewPatients
-
+	
 	public void viewBill() throws SQLException {
 		String qry = "SELECT bill.billid, patient.fname, patient.minit, patient.lname, bill.amountdue FROM bill"
 				+ " INNER JOIN appointment ON bill.visit_appointments_apptid=appointment.apptid"
 				+ " INNER JOIN patient ON appointment.patients_patientid=patient.patient";
-
+		
 		PreparedStatement statement = con.prepareStatement(qry);
-
+		
 		ResultSet result = statement.executeQuery();
 		if(result != null) {
 			printResults(result);
@@ -1123,12 +1230,12 @@ public class Main {
 			System.out.println("Failed to get results for this report.");
 		}
 	}//end viewPatients
-
+	
 	public void viewAppointments() throws SQLException {
 		String qry = "SELECT appointment.apptid, patient.fname, patient.lname, doctor.fname, doctor.lname, appointment.datetime FROM appointment INNER JOIN patient ON appointment.patients_patientid=patient.patient INNER JOIN doctor ON appointment.doctors_doctorid=doctor.doctorid";
-
+		
 		PreparedStatement statement = con.prepareStatement(qry);
-
+		
 		ResultSet result = statement.executeQuery();
 		if(result != null) {
 			System.out.println("          PATIENT    PATIENT     DOCTOR     DOCTOR");
@@ -1136,7 +1243,7 @@ public class Main {
 		} else {
 			System.out.println("Failed to get results for this report.");
 		}
-
+		
 	}//end viewAppointments
 
 	public void printBill() throws SQLException {
@@ -1150,7 +1257,7 @@ public class Main {
 		blankLine();
 		System.out.println("Enter ID of BILL you wish to PRINT: ");
 		billID = sc.nextInt();
-
+		
 		String qry = "(SELECT bill.amountdue, appointment.datetime, patient.fname, patient.minit, patient.lname"
 				+ " FROM bill"
 				+ " RIGHT JOIN appointment on bill.visit_appointments_apptid=appointment.apptid"
@@ -1158,11 +1265,11 @@ public class Main {
 				+ " WHERE billid = ?)";
 		PreparedStatement statement = con.prepareStatement(qry); //print normally
 		statement.setInt(1, billID);
-
+		
 		String qry2 = "SELECT bill.items FROM bill WHERE billid = ?";
-		PreparedStatement statement2 = con.prepareStatement(qry2);
+		PreparedStatement statement2 = con.prepareStatement(qry2); 
 		statement2.setInt(1, billID);
-
+		
 		//NORMAL PRINT
 		ResultSet result = statement.executeQuery();
 		if(result != null) {
@@ -1175,24 +1282,84 @@ public class Main {
 		if(result2 != null) {
 			while(result2.next()) {
 				String items = result2.getString(1);
-				billDecode(items);
+				billDecode(items);		
 			}
 		} else {
 			System.out.println("Failed to get results for this report.");
 		}
-
+		
 	}
+		
+	public String updateDate(int sw) {
+		//input is integer for the switch below
+		// 1 = Enter Date of Birth
+		// 2 = Enter New Date of Birth
+		// 3 = Enter Date
+		// 3 = Enter New Date
+		//returns String hopefully formatted as YYYY-MM-DD
+		  Scanner sc = new Scanner(System.in);
+		  String tempDate = null;
+		  switch (sw) {
+		  case 1:
+		    Boolean flag = false;
+		    while (flag == false) {
+		      System.out.println("Enter Date of Birth: (YYYY-MM-DD)");
+		      tempDate = (sc.next());
+		      flag = verifyUserInput(tempDate);
+		    } //end while
+		    break;
+		  case 2:
+		    flag = false;
+		    while (flag == false) {
+		      System.out.println("Enter New Date of Birth: (YYYY-MM-DD)");
+		      tempDate = (sc.next());
+		      flag = verifyUserInput(tempDate);
+		    } //end while
+		    break;
+		  case 3:
+		    flag = false;
+		    while (flag == false) {
+		      System.out.println("Enter Appointment Date: (YYYY-MM-DD)");
+		      tempDate = (sc.next());
+		      flag = verifyUserInput(tempDate);
+		    } //end while
+		    break;
+		  case 4:
+		    flag = false;
+		    while (flag == false) {
+		      System.out.println("Enter New Appointment Date: (YYYY-MM-DD)");
+		      tempDate = (sc.next());
+		      flag = verifyUserInput(tempDate);
+		    } //end while
+		    break;
+		  } //end switch
+		  blankLine();
+		  return tempDate;
+		} //end updateDateTime	
+		
+	public void viewDoctors() throws SQLException {
+	    String qry = "SELECT doctor.doctorid, doctor.fname, doctor.minit, doctor.lname FROM DOCTOR";
 
+	    PreparedStatement statement = con.prepareStatement(qry);
+
+	    ResultSet result = statement.executeQuery();
+	    if (result != null) {
+	        printResults(result);
+	    } else {
+	        System.out.println("Failed to get results for this report.");
+	    }
+	} //end viewDoctors
+	
 	public void viewClaims() throws SQLException {
 		Scanner sc = new Scanner(System.in);
 		int patientID;
-		String qry = "(SELECT claim.claimid, patient.fname, patient.minit, patient.lname, patient.insurance_name, patient.insurance_id, bill.billid, bill.amountdue, bill.items, appointment.datetime, claim.claimamount"
+		String qry = "(SELECT claim.claimid, patient.fname, patient.minit, patient.lname, patient.insurance_name, patient.insurance_id, bill.billid, bill.amountdue, bill.items, appointment.datetime, claim.claimamount, claim.settled"
 				+ " FROM claim"
 				+ " INNER JOIN patient ON claim.patients_patientid=patient.patient"
-				+ " INNER JOIN bill ON claim.billid=bill.billid"
+				+ " INNER JOIN bill ON claim.billid=bill.billid"		
 				+ " INNER JOIN appointment ON bill.visit_appointments_apptid=appointment.apptid)";
 		PreparedStatement statement = con.prepareStatement(qry); //print normally
-
+		
 		ResultSet result = statement.executeQuery();
 		if(result != null) {
 			printResults(result);
@@ -1200,39 +1367,39 @@ public class Main {
 			System.out.println("Failed to get results for this report.");
 		}
 	}
-
+	
 	void blankLine() {
 		System.out.println("");
 	}
 
-	//Patient Direct Payment
-	void Direct_Payment() throws SQLException {
+    //Patient Direct Payment
+    void Direct_Payment() throws SQLException {
 
-		Scanner sc = new Scanner(System.in);
-		System.out.println();
-		viewBill();
+        Scanner sc = new Scanner(System.in);
+        System.out.println();
+        viewBill();
 
-		System.out.print("Enter Patient's bill ID: ");
-		int billid = sc.nextInt();
+        System.out.print("Enter Patient's bill ID: ");
+        int billid = sc.nextInt();
 
-		System.out.print("Enter Patients payment amount: $");
-		int paidamount = sc.nextInt();
+        System.out.print("Enter Patients payment amount: $");
+        int paidamount = sc.nextInt();
 
-		String qry = "SELECT amountdue FROM BILL WHERE amountdue > 0 and billid = ?";
-		PreparedStatement statement = con.prepareStatement(qry);
+        String qry = "SELECT amountdue FROM BILL WHERE amountdue > 0 and billid = ?";
+        PreparedStatement statement = con.prepareStatement(qry);
 
-		//System.out.print("Enter bill's ID: ");
-		//int billid = sc.nextInt();
-		statement.setInt(1, billid);
+        //System.out.print("Enter bill's ID: ");
+        //int billid = sc.nextInt();
+        statement.setInt(1, billid);
 
-		ResultSet r = statement.executeQuery();
-		while(r.next())
-		{
-			int amountdue = r.getInt(1);
+        ResultSet r = statement.executeQuery();
+        while(r.next())
+        {
+            int amountdue = r.getInt(1);
 
-			Payment_Calculator(amountdue, paidamount, billid);
-		}
-	}
+            Payment_Calculator(amountdue, paidamount, billid);
+        }
+    }
 
 	// Calculate remaining balance after payment
 	// Updates bills amountdue in the database
@@ -1242,59 +1409,64 @@ public class Main {
 
 		amountUnpaid = amountDue - paidAmount;
 
-		//UPDATE BILL
-		String qry = "UPDATE BILL set amountdue = ? where billid = ?";
-		PreparedStatement statement = con.prepareStatement(qry);
+//		if (amountUnpaid <= 0) {
+//			System.out.println("Could not pay bill. Remaining balance would be negative.");
+//		}
+//		else {
+			//UPDATE BILL
+			String qry = "UPDATE BILL set amountdue = ? where billid = ?";
+			PreparedStatement statement = con.prepareStatement(qry);
 
-		statement.setInt(1, amountUnpaid);
+			statement.setInt(1, amountUnpaid);
 
-		statement.setInt(2, billid);
-		statement.executeUpdate();
+			statement.setInt(2, billid);
+			statement.executeUpdate();
 
-		//SELECT BILL REMAINING BALANCE
-		qry = "SELECT amountdue FROM BILL WHERE billid = ?";
-		statement = con.prepareStatement(qry);
+			//SELECT BILL REMAINING BALANCE
+			qry = "SELECT amountdue FROM BILL WHERE billid = ?";
+			statement = con.prepareStatement(qry);
 
-		statement.setInt(1, billid);
+			statement.setInt(1, billid);
 
-		ResultSet r = statement.executeQuery();
-		while(r.next())
-		{
-			int newAmountDue = r.getInt(1);
-			System.out.print("Remaining Balance: $" + newAmountDue + "\n");
+			ResultSet r = statement.executeQuery();
+			while(r.next())
+			{
+				int newAmountDue = r.getInt(1);
+				System.out.print("Remaining Balance: $" + newAmountDue + "\n");
+			}
 		}
-	}
+//	}
 
-	// FIXME: trying to make claim amount be paid by insurance
-	void Claim_Payment() throws SQLException {
-		//prints existing claims
-		//asks user for which claim to submit (pay)
-		//pay bill amount = claim amountdue
-		//call function/query to pay
-		//print bill table where billid = claim.billid
-		//make amount due on claim $0 because the amount was just paid
-		viewClaims();
-		blankLine();
-
-		Scanner sc = new Scanner(System.in);
+    // FIXME: trying to make claim amount be paid by insurance
+    void Claim_Payment() throws SQLException {
+    	//prints existing claims
+    	//asks user for which claim to submit (pay)
+    	//pay bill amount = claim amountdue
+    	//call function/query to pay
+    	//print bill table where billid = claim.billid
+    	//make amount due on claim $0 because the amount was just paid
+    	viewClaims();
+    	blankLine();
+    	
+        Scanner sc = new Scanner(System.in); 
 		String qry = "(SELECT claimamount, claim.billid, bill.amountdue FROM CLAIM INNER JOIN bill ON claim.billid=bill.billid WHERE claimamount > 0 and claimid = ?)"; //PULL CLAIM.CLAIMAMOUNT AND CLAIM.BILLID
 		PreparedStatement statement = con.prepareStatement(qry);
 
-		System.out.println("Enter ClaimID for which you wish to SUBMIT:");
+        System.out.println("Enter Claim ID for which you wish to SUBMIT:");
 		int claimID = sc.nextInt();
 		statement.setInt(1, claimID);
 		blankLine();
-
-		ResultSet r = statement.executeQuery();
-		while(r.next()) {
-			int paidamount = r.getInt(1); //amount to pay
-			int billid = r.getInt(2); //bill id
-			int amountdue = r.getInt(3); //amount due on bill
-
-			qry = "SELECT settled FROM CLAIM WHERE claimid = ?";
+		
+        ResultSet r = statement.executeQuery();
+        while(r.next()) {
+        	int paidamount = r.getInt(1); //amount to pay
+        	int billid = r.getInt(2); //bill id
+        	int amountdue = r.getInt(3); //amount due on bill
+        	
+			qry = "SELECT settled FROM CLAIM WHERE billid = ?";
 			statement = con.prepareStatement(qry);
 
-			statement.setInt(1, claimID);
+			statement.setInt(1, billid);
 
 			r = statement.executeQuery();
 			while(r.next()) {
@@ -1321,10 +1493,10 @@ public class Main {
 			}
 //        	String qry2 = "UPDATE claimamount = 0 WHERE claimid = ?";
 //        	PreparedStatement statement2 = con.prepareStatement(qry2);
-		}
-
-
-
+        }
+        
+		
+		
 
 //        System.out.print("Enter Patient's Bill ID: ");
 //        int billid = sc.nextInt();
@@ -1345,37 +1517,37 @@ public class Main {
 //            //Insurance_Payment_Calculator(amountdue, paidamount, billid);
 //            //Claim_Payment_Calculator(amountdue, claimPaidAmount, billid);
 //        }
-	}
+    }
 
+    
+    void Claim_Payment_Calculator(int amountDue, int paidAmount, int billid) throws SQLException {
 
-	void Claim_Payment_Calculator(int amountDue, int paidAmount, int billid) throws SQLException {
+        int amountUnpaid = 0;
 
-		int amountUnpaid = 0;
+        amountUnpaid = amountDue - paidAmount;
 
-		amountUnpaid = amountDue - paidAmount;
+        //UPDATE BILL
+        String qry = "UPDATE BILL set amountdue = ? where billid = ?";
+        PreparedStatement statement = con.prepareStatement(qry);
 
-		//UPDATE BILL
-		String qry = "UPDATE BILL set amountdue = ? where billid = ?";
-		PreparedStatement statement = con.prepareStatement(qry);
+        statement.setInt(1, amountUnpaid);
 
-		statement.setInt(1, amountUnpaid);
+        statement.setInt(2, billid);
+        statement.executeUpdate();
 
-		statement.setInt(2, billid);
-		statement.executeUpdate();
+        //SELECT BILL REMAINING BALANCE
+        qry = "SELECT amountdue FROM BILL WHERE billid = ?";
+        statement = con.prepareStatement(qry);
 
-		//SELECT BILL REMAINING BALANCE
-		qry = "SELECT amountdue FROM BILL WHERE billid = ?";
-		statement = con.prepareStatement(qry);
+        statement.setInt(1, billid);
 
-		statement.setInt(1, billid);
-
-		ResultSet r = statement.executeQuery();
-		while(r.next())
-		{
-			int newAmountDue = r.getInt(1);
-			System.out.print("Remaining Balance: $" + newAmountDue + "\n");
-		}
-	}
+        ResultSet r = statement.executeQuery();
+        while(r.next())
+        {
+            int newAmountDue = r.getInt(1);
+            System.out.print("Remaining Balance: $" + newAmountDue + "\n");
+        }
+    }
 }
 
 
