@@ -908,14 +908,18 @@ public class Main {
 				//skips logic and returns to menu
 			}
 		}
+		catch (NullPointerException NPE) {
+			System.out.println("setInt throws NULL pointer exception");
+		}
+		catch (SQLIntegrityConstraintViolationException RIC)
+		{
+			System.out.println("Appointment ID does not exist! Try Again!");
+		}
 		catch (SQLException x)
 		{
 			System.out.println(x);
 		}
-		catch (NullPointerException NPE)
-		{
-			System.out.println("setInt throws NULL pointer exception");
-		}
+
 	}
 
     // fixme: What are the necessary attributes for the claim table?
