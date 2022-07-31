@@ -758,17 +758,18 @@ public class Main {
 				}
 			}
 		}
-		catch (SQLException x)
+		catch(SQLIntegrityConstraintViolationException s)
 		{
-			System.out.println(x);
+			System.out.println("This appointment has been billed.");
 		}
-		catch (NullPointerException NPE)
-		{
+		catch (NullPointerException NPE) {
 			System.out.println("setInt throws NULL pointer exception");
 		}
-		catch (IllegalArgumentException IAE) // thrown by valueOf()
-		{
+		catch (IllegalArgumentException IAE){ // thrown by valueOf()
 			System.out.println("Incorrect Date format. Try Again!");
+		}
+		catch (SQLException x) {
+			System.out.println("This appointment ID does not exist! Try Again!");
 		}
 	}
 
@@ -922,7 +923,6 @@ public class Main {
 
 	}
 
-    // fixme: What are the necessary attributes for the claim table?
     void Create_Update_Submit_Claim() throws SQLException {
         String userInput = "";
         Scanner sc = new Scanner(System.in);
@@ -943,9 +943,7 @@ public class Main {
                 statement = con.prepareStatement(qry);
 
                 viewPatients();
-                
-                //ENTER PATIENT ID
-                
+				viewBill(); // we need to see bills not patients
                 //get patient id from user
                 int patientID = userInputInts(1);
                 statement.setInt(2, patientID);
@@ -1115,8 +1113,7 @@ public class Main {
 			System.out.println("Failed to get results for this report.");
 		}
     }
-    
-    
+
 	public String userInput(int sw) {
 		//input is a hardcoded integer for switch below
 		//each case calls verifyUserInput()
@@ -1652,7 +1649,6 @@ public class Main {
 			}
 		}
 
-    // FIXME: trying to make claim amount be paid by insurance
     void Claim_Payment() throws SQLException {
     	//prints existing claims
     	//asks user for which claim to submit (pay)
@@ -1709,10 +1705,6 @@ public class Main {
 //        	String qry2 = "UPDATE claimamount = 0 WHERE claimid = ?";
 //        	PreparedStatement statement2 = con.prepareStatement(qry2);
         }
-        
-		
-		
-
 //        System.out.print("Enter Patient's Bill ID: ");
 //        int billid = sc.nextInt();
 //
