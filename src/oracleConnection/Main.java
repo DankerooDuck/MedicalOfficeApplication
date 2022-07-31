@@ -913,7 +913,7 @@ public class Main {
 		}
 		catch (SQLIntegrityConstraintViolationException RIC)
 		{
-			System.out.println("Appointment ID does not exist! Try Again!");
+			System.out.println("ID does not exist! Try Again!\n");
 		}
 		catch (SQLException x)
 		{
