@@ -1463,10 +1463,10 @@ public class Main {
         	int billid = r.getInt(2); //bill id
         	int amountdue = r.getInt(3); //amount due on bill
         	
-			qry = "SELECT settled FROM CLAIM WHERE billid = ?";
+			qry = "SELECT settled FROM CLAIM WHERE claimid = ?";
 			statement = con.prepareStatement(qry);
 
-			statement.setInt(1, billid);
+			statement.setInt(1, claimID);
 
 			r = statement.executeQuery();
 			while(r.next()) {
