@@ -1204,7 +1204,7 @@ public class Main {
 	}
 	
 	public void viewPatients() throws SQLException {
-		String qry = "SELECT patient.patient, patient.fname, patient.minit, patient.lname, patient.dob, patient.insurance_name, patient.insurance_id FROM PATIENT";
+		String qry = "SELECT patient.patient, patient.fname, patient.minit, patient.lname, patient.dob, patient.insurance_name, claim.insuranceid FROM PATIENT INNER JOIN claim ON patient.patient=claim.patients_patientid";
 		
 		PreparedStatement statement = con.prepareStatement(qry);
 		
@@ -1353,7 +1353,7 @@ public class Main {
 	public void viewClaims() throws SQLException {
 		Scanner sc = new Scanner(System.in);
 		int patientID;
-		String qry = "(SELECT claim.claimid, patient.fname, patient.minit, patient.lname, patient.insurance_name, patient.insurance_id, bill.billid, bill.amountdue, bill.items, appointment.datetime, claim.claimamount"
+		String qry = "(SELECT claim.claimid, patient.fname, patient.minit, patient.lname, patient.insurance_name, patient.insurance_id, bill.billid, bill.amountdue, bill.items, appointment.datetime, claim.claimamount, claim.settled"
 				+ " FROM claim"
 				+ " INNER JOIN patient ON claim.patients_patientid=patient.patient"
 				+ " INNER JOIN bill ON claim.billid=bill.billid"		
@@ -1409,26 +1409,31 @@ public class Main {
 
 		amountUnpaid = amountDue - paidAmount;
 
-		//UPDATE BILL
-		String qry = "UPDATE BILL set amountdue = ? where billid = ?";
-		PreparedStatement statement = con.prepareStatement(qry);
+		if (amountUnpaid <= 0) {
+			System.out.println("Could not pay bill. Remaining balance would be negative.");
+		}
+		else {
+			//UPDATE BILL
+			String qry = "UPDATE BILL set amountdue = ? where billid = ?";
+			PreparedStatement statement = con.prepareStatement(qry);
 
-		statement.setInt(1, amountUnpaid);
+			statement.setInt(1, amountUnpaid);
 
-		statement.setInt(2, billid);
-		statement.executeUpdate();
+			statement.setInt(2, billid);
+			statement.executeUpdate();
 
-		//SELECT BILL REMAINING BALANCE
-		qry = "SELECT amountdue FROM BILL WHERE billid = ?";
-		statement = con.prepareStatement(qry);
+			//SELECT BILL REMAINING BALANCE
+			qry = "SELECT amountdue FROM BILL WHERE billid = ?";
+			statement = con.prepareStatement(qry);
 
-		statement.setInt(1, billid);
+			statement.setInt(1, billid);
 
-		ResultSet r = statement.executeQuery();
-		while(r.next())
-		{
-			int newAmountDue = r.getInt(1);
-			System.out.print("Remaining Balance: $" + newAmountDue + "\n");
+			ResultSet r = statement.executeQuery();
+			while(r.next())
+			{
+				int newAmountDue = r.getInt(1);
+				System.out.print("Remaining Balance: $" + newAmountDue + "\n");
+			}
 		}
 	}
 
@@ -1458,6 +1463,8 @@ public class Main {
         	int billid = r.getInt(2); //bill id
         	int amountdue = r.getInt(3); //amount due on bill
 
+        	Payment_Calculator(amountdue, paidamount, billid);
+        	
 			qry = "SELECT settled FROM CLAIM WHERE billid = ?";
 			statement = con.prepareStatement(qry);
 
