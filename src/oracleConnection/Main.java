@@ -1409,10 +1409,10 @@ public class Main {
 
 		amountUnpaid = amountDue - paidAmount;
 
-		if (amountUnpaid <= 0) {
-			System.out.println("Could not pay bill. Remaining balance would be negative.");
-		}
-		else {
+//		if (amountUnpaid <= 0) {
+//			System.out.println("Could not pay bill. Remaining balance would be negative.");
+//		}
+//		else {
 			//UPDATE BILL
 			String qry = "UPDATE BILL set amountdue = ? where billid = ?";
 			PreparedStatement statement = con.prepareStatement(qry);
@@ -1435,7 +1435,7 @@ public class Main {
 				System.out.print("Remaining Balance: $" + newAmountDue + "\n");
 			}
 		}
-	}
+//	}
 
     // FIXME: trying to make claim amount be paid by insurance
     void Claim_Payment() throws SQLException {
@@ -1462,8 +1462,6 @@ public class Main {
         	int paidamount = r.getInt(1); //amount to pay
         	int billid = r.getInt(2); //bill id
         	int amountdue = r.getInt(3); //amount due on bill
-
-        	Payment_Calculator(amountdue, paidamount, billid);
         	
 			qry = "SELECT settled FROM CLAIM WHERE billid = ?";
 			statement = con.prepareStatement(qry);
