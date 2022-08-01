@@ -632,7 +632,7 @@ public class Main {
 						System.out.println("3. Last Name");
 						System.out.println("4. Date of Birth");
 						System.out.println("5. Patient Records");
-						System.out.println("5. Back");
+						System.out.println("6. Back");
 						userInput = sc.next();
 						blankLine();
 
@@ -1085,6 +1085,7 @@ public class Main {
 				
 				System.out.println("Bill Update Menu:");
 				System.out.println("1. Bill Amount Due.");
+				System.out.println("2. Back");
 				userInput = sc.next();
 				if(userInput.equals("1")) {
 					String qry = "UPDATE BILL set amountdue = ? where billid = ?";
@@ -1098,6 +1099,9 @@ public class Main {
 					createUnpaidBillsReport();
 					blankLine();
 					createPaidBillsReports();
+				}
+				else if(userInput.equals("2")) {
+					//return to previous menu
 				}
 			}
 			if(userInput.equals("3"))
@@ -1193,16 +1197,27 @@ public class Main {
 					//END PRINT BILL SCREEN
 
 					//get bill id from user
-					int billID = userInputInts(7);
-					statement.setInt(4, billID);
+					System.out.println("1. Enter Bill ID: ");
+					System.out.println("2. Back");
+					userInput = sc.next();
+					
+					if (userInput.equals("1")) {
+						int billID = userInputInts(7);
+						statement.setInt(4, billID);
 
-					//get claim amount from user
-					int claimID = userInputInts(6);
-					statement.setInt(3, claimID);
+						//get claim amount from user
+						int claimID = userInputInts(6);
+						statement.setInt(3, claimID);
 
-					statement.execute();
-					blankLine();
-					System.out.println("New Claim Successfully Created");
+						statement.execute();
+						blankLine();
+						System.out.println("New Claim Successfully Created");
+					}
+					else if (userInput.equals("2")) {
+						break;
+						
+					}
+					
 				}
 				catch (SQLIntegrityConstraintViolationException e)
 				{
@@ -1211,21 +1226,23 @@ public class Main {
             }
             if(userInput.equals("2"))
             {
+            	viewClaims();
+            	blankLine();
+            	
+            	int claimID = userInputInts(11);
+            	blankLine();
+            	
+            	int menuInt = 0;
             	System.out.println("Update Claim Menu:");
             	System.out.println("1. Update Insurance ID:");
             	System.out.println("2. Update Patient ID:");
             	System.out.println("3. Update Claim Amount:");
             	System.out.println("4. Update Bill ID");
             	System.out.println("5. Back");
-            	int menuInt = sc.nextInt(); //user menu input used for switch below
+            	menuInt = sc.nextInt(); //user menu input used for switch below
             	blankLine();
             	
-            	viewClaims();
-            	blankLine();
             	
-            	System.out.println("Enter the ID of the CLAIM you wish to EDIT:");
-            	int claimID = sc.nextInt();
-            	blankLine();
             	
             	if (menuInt == 1) { //UPDATE INSURANCE ID
             		String qry = "UPDATE CLAIM SET insuranceid=? where claimid=?";
@@ -1264,7 +1281,8 @@ public class Main {
         			statementBill.executeUpdate();
                     System.out.println("Successfully updated Bill ID.");
             	}
-            	else if (menuInt == 5){
+            	else {
+            		break;
             		//return to prev menu
             	}
             }
@@ -1507,8 +1525,8 @@ public class Main {
 		// 8 = newBillID
 		// 9 = doctorID
 		// 10 = newDoctorID
-		// 11 = 
-		// 12 = 
+		// 11 = claimID
+		// 12 = newClaimID
 		// 13 = 
 		// 14 = 
 		//returns integer value of attributes above
@@ -1595,6 +1613,22 @@ public class Main {
 					flag = verifyUserInputInt(doctorIDNew);
 				}
 				return doctorIDNew;
+			case 11: //Claim ID
+				int claimID = 0;
+				while (flag == false) {
+					System.out.println("Enter Claim ID: ");
+					claimID = sc.nextInt();
+					flag = verifyUserInputInt(claimID);
+				}
+				return claimID;
+			case 12: //Claim ID
+				int claimIDNew = 0;
+				while (flag == false) {
+					System.out.println("Enter New Claim ID: ");
+					claimIDNew = sc.nextInt();
+					flag = verifyUserInputInt(claimIDNew);
+				}
+				return claimIDNew;
 			}
 			return 0;
 	}
