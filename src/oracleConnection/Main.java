@@ -1,7 +1,9 @@
 package oracleConnection;
 
 import java.sql.*;
+import java.util.InputMismatchException;
 import java.util.Scanner;
+
 
 public class Main {
 
@@ -500,9 +502,11 @@ public class Main {
 							
 							statement.executeUpdate();
 							System.out.println("Date of Birth Updated.");
-						} else if (userInput.equals("5")) {
+						}
+						else if (userInput.equals("5")) {
 							setPatientActivityMenu(patientID);
-						} else if (userInput.equals("6")) {
+						}
+						else if (userInput.equals("6")) {
 							break;
 							//back choice
 						}
@@ -514,13 +518,21 @@ public class Main {
 				}
 			}
 		}
+		catch (InputMismatchException IME)
+		{
+			System.out.println("Invalid Input. Try Again!");
+		}
+		catch (NullPointerException NPE)
+		{
+			System.out.println("Invalid Input. Try Again! ");
+		}
 		catch (SQLException x)
 		{
 			System.out.println(x);
 		}
-		catch (NullPointerException NPE)
+		catch (Exception e)
 		{
-			System.out.println("NUll pointer exception");
+			System.out.println("Unexpected error. Try Again!");
 		}
 	}
 
@@ -608,7 +620,7 @@ public class Main {
 							//DOCTOR NEW LAST NAME
 							String qry = "UPDATE DOCTOR set lname = ? where doctorid = ?";
 							PreparedStatement statement = con.prepareStatement(qry);
-							
+
 							String lname = userInput(12);
 							statement.setString(1, lname);
 							statement.setInt(2, doctorID);
@@ -622,7 +634,7 @@ public class Main {
 							break;
 							//skip logic and return to previous menu
 						}
-						
+
 					}
 				} else if (userInput.equals("3")) {
 					break;
@@ -630,13 +642,21 @@ public class Main {
 				}
 			}
 		}
-		catch (SQLException x)
+		catch (InputMismatchException IME)
 		{
-			System.out.println(x);
+			System.out.println("Invalid Input. Try Again!");
 		}
 		catch (NullPointerException NPE)
 		{
 			System.out.println("setInt throws NULL pointer exception");
+		}
+		catch (SQLException x)
+		{
+			System.out.println(x);
+		}
+		catch(Exception e)
+		{
+			System.out.println("Unexpected error. Try Again");
 		}
 	}
 
@@ -712,45 +732,50 @@ public class Main {
 				if (userInput.equals("3")) {
 
 					Create_Update_Bill();
-
 					//System.out.println("FIXME: LOGIC AND CALL CREATE BILL\n");
-
 				}
 				if (userInput.equals("4")) {
-					viewAppointments();
-					blankLine();
-					String qry = "DELETE FROM APPOINTMENT WHERE APPTID = ?";
-					PreparedStatement statement = con.prepareStatement(qry);
-
-					int appointmentID = 0;
-					Boolean flag = false; //loop if flag false, if user selects correct -> boolean == true -> exit loop
-					while (flag == false) {
-						System.out.println("Enter the ID of the appointment you wish to DELETE: ");
-						appointmentID = sc.nextInt();
+					try {
+						viewAppointments();
 						blankLine();
-						System.out.println("Are you sure you want to delete Appointment " + appointmentID + ". Is this correct?");
-						System.out.println("This action CANNOT be undone.");
-						System.out.println("1. Correct");
-						System.out.println("2. Incorrect");
-						userInput = sc.next(); //user input validation, correct or incorrect
-						blankLine();
+						String qry = "DELETE FROM APPOINTMENT WHERE APPTID = ?";
+						PreparedStatement statement = con.prepareStatement(qry);
 
-						if (userInput.equals("1")) {
-							flag = true; //exit loop
-						} else if (userInput.equals("2")) {
-							flag = false; //loop input
-						}
-					}//end while
-					statement.setInt(1, appointmentID);
-					
-					int patientID = getPatientIDFromAppointment(appointmentID); //get patientID from appointment before deleted
-					
-					statement.executeUpdate(); //execute appointment delete
-					
-					System.out.println("Successfully Deleted Appointment.");
-					System.out.println("Attempting to set Patient Records to \"Inactive\"");
-					setPatientActivity(patientID, false);
-					blankLine();
+						int appointmentID = 0;
+						Boolean flag = false; //loop if flag false, if user selects correct -> boolean == true -> exit loop
+						while (flag == false) {
+							System.out.println("Enter the ID of the appointment you wish to DELETE: ");
+							appointmentID = sc.nextInt();
+							blankLine();
+							System.out.println("Are you sure you want to delete Appointment " + appointmentID + ". Is this correct?");
+							System.out.println("This action CANNOT be undone.");
+							System.out.println("1. Correct");
+							System.out.println("2. Incorrect");
+							userInput = sc.next(); //user input validation, correct or incorrect
+							blankLine();
+
+							if (userInput.equals("1")) {
+								flag = true; //exit loop
+							} else if (userInput.equals("2")) {
+								flag = false; //loop input
+							}
+						}//end while
+						statement.setInt(1, appointmentID);
+
+						int patientID = getPatientIDFromAppointment(appointmentID); //get patientID from appointment before deleted
+
+						statement.executeUpdate(); //execute appointment delete
+
+						System.out.println("Successfully Deleted Appointment.");
+						System.out.println("Attempting to set Patient Records to \"Inactive\"");
+						setPatientActivity(patientID, false);
+						blankLine();
+					}
+					catch(SQLIntegrityConstraintViolationException s)
+					{
+						System.out.println("Invalid action. This appointment has already been billed.\n");
+					}
+
 				}
 				if (userInput.equals("5")) {
 					break;
@@ -758,18 +783,26 @@ public class Main {
 				}
 			}
 		}
+		catch (InputMismatchException IME)
+		{
+			System.out.println("Invalid Input. Try Again!");
+		}
 		catch(SQLIntegrityConstraintViolationException s)
 		{
-			System.out.println("This appointment has been billed.");
+			System.out.println("Invalid input non-existent Patient or Doctor ID!");
 		}
 		catch (NullPointerException NPE) {
-			System.out.println("setInt throws NULL pointer exception");
+			System.out.println("Invalid Input. Try Again! ");
 		}
 		catch (IllegalArgumentException IAE){ // thrown by valueOf()
 			System.out.println("Incorrect Date format. Try Again!");
 		}
 		catch (SQLException x) {
 			System.out.println("This appointment ID does not exist! Try Again!");
+		}
+		catch (Exception e)
+		{
+			System.out.println("Unexpected error. Try Again!");
 		}
 	}
 
@@ -879,7 +912,7 @@ public class Main {
 				billID = sc.nextInt();
 				blankLine();				
 				
-				System.out.println("What do you want to update:");
+				System.out.println("Bill Update Menu:");
 				System.out.println("1. Bill Amount Due.");
 				userInput = sc.next();
 				if(userInput.equals("1")) {
@@ -890,6 +923,10 @@ public class Main {
 					statement.setInt(1, sc.nextInt());
 					statement.setInt(2, billID);
 					statement.executeUpdate();
+					System.out.println("Bill updated successfully.");
+					createUnpaidBillsReport();
+					blankLine();
+					createPaidBillsReports();
 				}
 			}
 			if(userInput.equals("3"))
@@ -920,11 +957,20 @@ public class Main {
 		{
 			System.out.println(x);
 		}
+		catch(InputMismatchException IME)
+		{
+			System.out.println("Invalid user input! Try Again!");
+		}
+		catch(Exception e)
+		{
+			System.out.println("Unexpected Exception!");
+		}
 
 	}
 
     void Create_Update_Submit_Claim() throws SQLException {
-        String userInput = "";
+
+		String userInput = "";
         Scanner sc = new Scanner(System.in);
         while (true) {
             System.out.println("\nClaim Menu:");
@@ -937,54 +983,60 @@ public class Main {
             userInput = sc.next();
             blankLine();
             if (userInput.equals("1")) {
-            	//CREATE NEW CLAIM
-                String qry = "INSERT INTO CLAIM (insuranceid, patients_patientid, claimamount, billid, settled) VALUES (?,?,?,?,?)"; //claimid generated by DBMS
-                PreparedStatement statement = con.prepareStatement(qry);
-                statement = con.prepareStatement(qry);
+            	try {
+					//CREATE NEW CLAIM
+					String qry = "INSERT INTO CLAIM (insuranceid, patients_patientid, claimamount, billid, settled) VALUES (?,?,?,?,?)"; //claimid generated by DBMS
+					PreparedStatement statement = con.prepareStatement(qry);
+					statement = con.prepareStatement(qry);
 
-                viewPatients();
-				viewBill(); // we need to see bills not patients
-                //get patient id from user
-                int patientID = userInputInts(1);
-                statement.setInt(2, patientID);
-               
-                //get patient insurance id
-                int patientInsuranceID = userInputInts(3);
-                statement.setInt(1, patientInsuranceID);
-                blankLine();
-                              
-                statement.setString(5, "No"); //set "SETTLED" in DB to "No" by default
-                
-                //PRINT BILLS FOR PATIENTID
-        		String qry2 = "SELECT bill.billid, patient.fname, patient.minit, patient.lname, bill.amountdue FROM bill"
-        				+ " INNER JOIN appointment ON bill.visit_appointments_apptid=appointment.apptid"
-        				+ " INNER JOIN patient ON appointment.patients_patientid=patient.patient"
-        				+ " WHERE patient.patient = ?";
-        		
-        		PreparedStatement statement2 = con.prepareStatement(qry2);
-        		statement2.setInt(1, patientID);
-        		
-        		statement2.execute();
-        		
-        		ResultSet result2 = statement2.executeQuery();
-        		if(result2 != null) {
-        			printResults(result2);
-        		} else {
-        			System.out.println("Failed to get results for this report.");
-        		} 
-        		//END PRINT BILL SCREEN
-        		
-        		//get bill id from user
-                int billID = userInputInts(7);
-                statement.setInt(4, billID);
+					viewPatients();
+					//viewBill(); // we need to see bills not patients
+					//get patient id from user
+					int patientID = userInputInts(1);
+					statement.setInt(2, patientID);
 
-                //get claim amount from user
-                int claimID = userInputInts(6);
-                statement.setInt(3, claimID);
-                
-                statement.execute();
-                blankLine();
-                System.out.println("New Claim Successfully Created");
+					//get patient insurance id
+					int patientInsuranceID = userInputInts(3);
+					statement.setInt(1, patientInsuranceID);
+					blankLine();
+
+					statement.setString(5, "No"); //set "SETTLED" in DB to "No" by default
+
+					//PRINT BILLS FOR PATIENTID
+					String qry2 = "SELECT bill.billid, patient.fname, patient.minit, patient.lname, bill.amountdue FROM bill"
+							+ " INNER JOIN appointment ON bill.visit_appointments_apptid=appointment.apptid"
+							+ " INNER JOIN patient ON appointment.patients_patientid=patient.patient"
+							+ " WHERE patient.patient = ?";
+
+					PreparedStatement statement2 = con.prepareStatement(qry2);
+					statement2.setInt(1, patientID);
+
+					statement2.execute();
+
+					ResultSet result2 = statement2.executeQuery();
+					if (result2 != null) {
+						printResults(result2);
+					} else {
+						System.out.println("Failed to get results for this report.");
+					}
+					//END PRINT BILL SCREEN
+
+					//get bill id from user
+					int billID = userInputInts(7);
+					statement.setInt(4, billID);
+
+					//get claim amount from user
+					int claimID = userInputInts(6);
+					statement.setInt(3, claimID);
+
+					statement.execute();
+					blankLine();
+					System.out.println("New Claim Successfully Created");
+				}
+				catch (SQLIntegrityConstraintViolationException e)
+				{
+					System.out.println("Invalid Insurance ID! Try Again!");
+				}
             }
             if(userInput.equals("2"))
             {
@@ -1044,7 +1096,6 @@ public class Main {
             	else if (menuInt == 5){
             		//return to prev menu
             	}
-            	
             }
             if(userInput.equals("3"))
             {
