@@ -144,6 +144,28 @@ public class Main {
 			System.out.println("Failed to get results for this report.");
 		}
 	}
+	
+	public void createOutstandingAppointmentsReportByDateRange() throws SQLException {
+		String qry = "SELECT apptid, datetime, patients_patientid, doctors_doctorid"
+				+ " FROM appointment WHERE datetime"
+				+ " BETWEEN ? AND ?";
+
+		PreparedStatement statement = con.prepareStatement(qry);
+		String dateTemp = updateDate(5);
+		Date date = Date.valueOf(dateTemp);
+		statement.setDate(1, date);
+		
+		String dateTemp2 = updateDate(6);
+		Date date2 = Date.valueOf(dateTemp2);
+		statement.setDate(2, date2);
+		
+		ResultSet result = statement.executeQuery();
+		if(result != null) {
+			printResults(result);
+		} else {
+			System.out.println("Failed to get results for this report.");
+		}
+	}
 
 	public void createUnpaidBillsReport() throws SQLException {
 		System.out.println("\nUNPAID BILL(S) REPORT:");
@@ -159,7 +181,58 @@ public class Main {
 			System.out.println("Failed to get results for this report.");
 		}
 	}
+	
+	public void createUnpaidBillsReportByCustomer(int patientid) throws SQLException {
+		//take patient id
+		//select unpaid bills where amountdue > 0 where patientid = ?
+		
+		System.out.println("\nUNPAID BILL(S) REPORT:");
+		System.out.println("---------------------");
+		String qry = "SELECT bill.billid, patient.fname, patient.minit, patient.lname, appointment.datetime"
+				+ " FROM bill"
+				+ " INNER JOIN appointment ON bill.visit_appointments_apptid=appointment.apptid"
+				+ " INNER JOIN patient ON appointment.patients_patientid=patient.patient"
+				+ " WHERE bill.amountdue > 0"
+				+ " AND patient.patient = ?";
 
+		PreparedStatement statement = con.prepareStatement(qry);
+
+		statement.setInt(1, patientid);
+		ResultSet result = statement.executeQuery();
+		if(result != null) {
+			printResults(result);
+		} else {
+			System.out.println("Failed to get results for this report.");
+		}
+	}
+
+	public void createUnpaidBillsReportByDate() throws SQLException {
+		System.out.println("\nUNPAID BILL(S) REPORT:");
+		System.out.println("---------------------");
+		String qry = "SELECT bill.billid, patient.fname, patient.minit, patient.lname, appointment.datetime, bill.amountdue"
+				+ " FROM bill"
+				+ " INNER JOIN appointment ON bill.visit_appointments_apptid=appointment.apptid"
+				+ " INNER JOIN patient ON appointment.patients_patientid=patient.patient"
+				+ " WHERE bill.amountdue > 0"
+				+ " AND appointment.datetime BETWEEN ? AND ?";
+
+		//FROM BILL WHERE amountdue > 0
+		PreparedStatement statement = con.prepareStatement(qry);
+		String dateTemp = updateDate(5);
+		Date date = Date.valueOf(dateTemp);
+		statement.setDate(1, date);
+		
+		String dateTemp2 = updateDate(6);
+		Date date2 = Date.valueOf(dateTemp2);
+		statement.setDate(2, date2);
+		ResultSet result = statement.executeQuery();
+		if(result != null) {
+			printResults(result);
+		} else {
+			System.out.println("Failed to get results for this report.");
+		}
+	}
+	
 	public void createPaidBillsReports() throws SQLException {
 		System.out.println("\nPAID BILL(S) REPORT:");
 		System.out.println("---------------------");
@@ -175,6 +248,57 @@ public class Main {
 		}
 	}
 
+	public void createPaidBillsReportByCustomer(int patientid) throws SQLException {
+		//take patient id
+		//select unpaid bills where amountdue > 0 where patientid = ?
+		
+		System.out.println("\nPAID BILL(S) REPORT:");
+		System.out.println("---------------------");
+		String qry = "SELECT bill.billid, patient.fname, patient.minit, patient.lname, appointment.datetime"
+				+ " FROM bill"
+				+ " INNER JOIN appointment ON bill.visit_appointments_apptid=appointment.apptid"
+				+ " INNER JOIN patient ON appointment.patients_patientid=patient.patient"
+				+ " WHERE bill.amountdue = 0"
+				+ " AND patient.patient = ?";
+
+		PreparedStatement statement = con.prepareStatement(qry);
+		
+		statement.setInt(1, patientid);
+		ResultSet result = statement.executeQuery();
+		if(result != null) {
+			printResults(result);
+		} else {
+			System.out.println("Failed to get results for this report.");
+		}
+	}
+
+	public void createPaidBillsReportByDate() throws SQLException {
+		System.out.println("\nPAID BILL(S) REPORT:");
+		System.out.println("---------------------");
+		String qry = "SELECT bill.billid, patient.fname, patient.minit, patient.lname, appointment.datetime, bill.amountdue"
+				+ " FROM bill"
+				+ " INNER JOIN appointment ON bill.visit_appointments_apptid=appointment.apptid"
+				+ " INNER JOIN patient ON appointment.patients_patientid=patient.patient"
+				+ " WHERE bill.amountdue = 0"
+				+ " AND appointment.datetime BETWEEN ? AND ?";
+
+		//FROM BILL WHERE amountdue > 0
+		PreparedStatement statement = con.prepareStatement(qry);
+		String dateTemp = updateDate(5);
+		Date date = Date.valueOf(dateTemp);
+		statement.setDate(1, date);
+		
+		String dateTemp2 = updateDate(6);
+		Date date2 = Date.valueOf(dateTemp2);
+		statement.setDate(2, date2);
+		ResultSet result = statement.executeQuery();
+		if(result != null) {
+			printResults(result);
+		} else {
+			System.out.println("Failed to get results for this report.");
+		}
+	}
+	
 	public void createActivePatientReport() throws SQLException {
 		System.out.println("\nACTIVE PATIENT(S) REPORT:");
 		System.out.println("---------------------");
@@ -201,7 +325,7 @@ public class Main {
 
 		PreparedStatement statement = con.prepareStatement(qry);
 
-		statement.setString(1, "Inactive");
+		statement.setString(1, "Active");
 		
 		ResultSet result = statement.executeQuery();
 		if(result != null) {
@@ -215,10 +339,11 @@ public class Main {
 		System.out.println("\nACTIVE DOCTOR(S) REPORT:");
 		System.out.println("---------------------");
 		// TODO: broken query
-		String qry = "SELECT * FROM DOCTOR";
+		String qry = "SELECT * FROM DOCTOR WHERE doctor_records = ?";
 
 		PreparedStatement statement = con.prepareStatement(qry);
-
+		String doctorRecords = "Active";
+		statement.setString(1, doctorRecords);
 		ResultSet result = statement.executeQuery();
 		if(result != null) {
 			printResults(result);
@@ -343,7 +468,7 @@ public class Main {
 				break;
 		}
 	}
-	
+
 	private void Create_Reports() {
 		Scanner sc = new Scanner(System.in);
 
@@ -354,18 +479,64 @@ public class Main {
 		System.out.println("4. Active Patients");
 		System.out.println("5. Active Doctors");
 		System.out.println("6. Back");
-
+		
 		try {
 			int input = sc.nextInt();
+			blankLine();
 			switch(input) {
 				case 1:
 					createOutstandingAppointmentsReport();
+					blankLine();
+					createOutstandingAppointmentsReportByDateRange();
+					
 					break;
 				case 2:
-					createUnpaidBillsReport();
+					System.out.println("Create Unpaid Bill Report by:");
+					System.out.println("1. Customer");
+					System.out.println("2. Date Range");
+					System.out.println("3. Back");
+					input = sc.nextInt();
+					blankLine();
+					
+					//submenu
+					switch(input) {
+						case 1: //sort by customer
+							viewPatients();
+							blankLine();
+							int patientID = userInputInts(1);
+							createUnpaidBillsReportByCustomer(patientID);
+							break;
+							
+						case 2: //sort by date range
+							createUnpaidBillsReport();
+							blankLine();
+							createUnpaidBillsReportByDate();
+							break;
+							
+						case 3:
+							break;
+					}//end submenu				
 					break;
 				case 3:
-					createPaidBillsReports();
+					System.out.println("Create Paid Bill Report by:");
+					System.out.println("1. Customer");
+					System.out.println("2. Date Range");
+					System.out.println("3. Back");
+					input = sc.nextInt();
+					blankLine();
+					
+					//submenu
+					switch(input) {
+						case 1:
+							viewPatients();
+							blankLine();
+							int patientID = userInputInts(1);
+							createPaidBillsReportByCustomer(patientID);
+							break;
+						case 2:
+							createPaidBillsReportByDate();
+							break;
+					}//end submenu					
 					break;
 				case 4:
 					createActivePatientReport();
@@ -1036,7 +1207,7 @@ public class Main {
 				catch (SQLIntegrityConstraintViolationException e)
 				{
 					System.out.println("Invalid Insurance ID! Try Again!");
-				}
+				}            	
             }
             if(userInput.equals("2"))
             {
@@ -1547,6 +1718,9 @@ public class Main {
 		// 2 = Enter New Date of Birth
 		// 3 = Enter Date
 		// 3 = Enter New Date
+		//for reports
+		// 4 = Enter Start Date
+		// 5 = Enter End Date
 		//returns String hopefully formatted as YYYY-MM-DD
 		  Scanner sc = new Scanner(System.in);
 		  String tempDate = null;
@@ -1583,6 +1757,22 @@ public class Main {
 		      flag = verifyUserInput(tempDate);
 		    } //end while
 		    break;
+		  case 5:
+			    flag = false;
+			    while (flag == false) {
+			      System.out.println("Enter Start Date: (YYYY-MM-DD)");
+			      tempDate = (sc.next());
+			      flag = verifyUserInput(tempDate);
+			    } //end while
+			    break;
+		  case 6:
+			    flag = false;
+			    while (flag == false) {
+			      System.out.println("Enter End Date: (YYYY-MM-DD)");
+			      tempDate = (sc.next());
+			      flag = verifyUserInput(tempDate);
+			    } //end while
+			    break;
 		  } //end switch
 		  blankLine();
 		  return tempDate;
