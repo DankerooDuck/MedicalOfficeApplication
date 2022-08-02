@@ -672,7 +672,6 @@ public class Main {
 							statement.setInt(2, patientID);
 							
 							statement.executeUpdate();
-							System.out.println("Date of Birth Updated.");
 						}
 						else if (userInput.equals("5")) {
 							setPatientActivityMenu(patientID);
@@ -681,7 +680,6 @@ public class Main {
 							break;
 							//back choice
 						}
-						
 					}
 				} else if (userInput.equals("3")) {
 					break;
@@ -757,7 +755,6 @@ public class Main {
 					blankLine();
 
 					while (true) {
-						System.out.println("Doctor Update Menu");
 						System.out.println("What do you want to update:");
 						System.out.println("1. First Name");
 						System.out.println("2. Middle Initial");
@@ -895,7 +892,7 @@ public class Main {
 						statement.setInt(2, apptID);
 						statement.executeUpdate();
 
-						System.out.println("Appointment successfully updated.\n");
+						//System.out.println("Appointment successfully updated.\n");
 					} else if (userInput.equals("2")) {
 						//return to main menu
 					}
@@ -1095,7 +1092,6 @@ public class Main {
 					statement.setInt(1, sc.nextInt());
 					statement.setInt(2, billID);
 					statement.executeUpdate();
-					System.out.println("Bill updated successfully.");
 					createUnpaidBillsReport();
 					blankLine();
 					createPaidBillsReports();
@@ -1217,11 +1213,10 @@ public class Main {
 						break;
 						
 					}
-					
 				}
 				catch (SQLIntegrityConstraintViolationException e)
 				{
-					System.out.println("Invalid Insurance ID! Try Again!");
+					System.out.println("Invalid non-existing Patient or Insurance or Bill ID! Try Again!");
 				}            	
             }
             if(userInput.equals("2"))
