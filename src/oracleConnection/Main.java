@@ -1242,17 +1242,15 @@ public class Main {
 
 				int menuInt = 0;
 				System.out.println("Update Claim Menu:");
-				System.out.println("1. Update Insurance ID:");
-				System.out.println("2. Update Patient ID:");
-				System.out.println("3. Update Claim Amount:");
-				System.out.println("4. Update Bill ID");
-				System.out.println("5. Back");
+				//System.out.println("1. Update Insurance ID:");
+				//System.out.println("2. Update Patient ID:");
+				System.out.println("1. Update Claim Amount:");
+				//System.out.println("4. Update Bill ID");
+				System.out.println("2. Back");
 				menuInt = sc.nextInt(); //user menu input used for switch below
 				blankLine();
 
-
-
-				if (menuInt == 1) { //UPDATE INSURANCE ID
+				/*if (menuInt == 1) { //UPDATE INSURANCE ID
 					String qry = "UPDATE CLAIM SET insuranceid=? where claimid=?";
 					PreparedStatement statementInsurance = con.prepareStatement(qry);
 					int insuranceID = userInputInts(4);
@@ -1270,8 +1268,8 @@ public class Main {
 					statementPatient.setInt(2, claimID);
 					statementPatient.executeUpdate();
 					System.out.println("Successfully updated Patient ID.");
-				}
-				if (menuInt == 3) { //UPDATE CLAIM AMOUNT
+				}*/
+				if (menuInt == 1) { //UPDATE CLAIM AMOUNT
 					String qry = "UPDATE CLAIM set claimamount = ? WHERE claimid = ?";
 					PreparedStatement statementClaimAmnt = con.prepareStatement(qry);
 					int claimAmount = userInputInts(6);
@@ -1280,7 +1278,7 @@ public class Main {
 					statementClaimAmnt.executeUpdate();
 					System.out.println("Successfully updated Claim Amount.");
 				}
-				if (menuInt == 4) { //UPDATE BILL ID
+				/*if (menuInt == 4) { //UPDATE BILL ID
 					String qry = "UPDATE CLAIM set billid = ? WHERE claimid = ?";
 					PreparedStatement statementBill = con.prepareStatement(qry);
 					int billID = userInputInts(8);
@@ -1288,9 +1286,8 @@ public class Main {
 					statementBill.setInt(2, claimID);
 					statementBill.executeUpdate();
 					System.out.println("Successfully updated Bill ID.");
-				}
+				}*/
 				else {
-					break;
 					//return to prev menu
 				}
 			}
