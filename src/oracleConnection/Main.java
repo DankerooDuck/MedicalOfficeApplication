@@ -7,9 +7,9 @@ import java.util.Scanner;
 
 public class Main {
 
-	static final String user = "T11";
-	static final String pword = "Summer2022T11";
-	static final String url = "jdbc:oracle:thin:@cisvm-oracle.unfcsd.unf.edu:1521:orcl";
+	static final String user = "";
+	static final String pword = "";
+	static final String url = "";
 	private Connection con;
 
 	void printResults(ResultSet set) throws SQLException {
